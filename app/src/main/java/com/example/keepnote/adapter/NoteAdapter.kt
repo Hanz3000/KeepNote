@@ -3,6 +3,8 @@ package com.example.keepnote.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.keepnote.databinding.NoteItemBinding
+import com.example.keepnote.entity.Note
 
 class NoteAdapter(private val onNoteClick: (Note) -> Unit) : RecyclerView.Adapter<NoteAdapter.NoteViewHolder>() {
     private var notes = emptyList<Note>() // Daftar catatan yang akan ditampilkan

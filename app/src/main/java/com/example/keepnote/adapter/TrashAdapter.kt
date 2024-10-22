@@ -7,6 +7,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.keepnote.R
+import com.example.keepnote.entity.Trash
 import java.util.Date
 
 class TrashAdapter(

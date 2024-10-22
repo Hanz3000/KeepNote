@@ -1,0 +1,20 @@
+<!-- res/drawable/note_item_background.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Background color of the item -->
+    <solid android:color="@android:color/white" />
+
+    <!-- Rounded corners -->
+    <corners android:radius="8dp" />
+
+    <!-- Border/Stroke around the item -->
+    <stroke
+        android:width="1dp"
+        android:color="@android:color/darker_gray" />
+
+    <!-- Padding inside the item -->
+    <padding
+        android:left="8dp"
+        android:right="8dp"
+        android:top="8dp"
+        android:bottom="8dp" />
+</shape>

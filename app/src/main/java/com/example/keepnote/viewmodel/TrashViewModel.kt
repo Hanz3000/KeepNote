@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.keepnote.dao.NoteDao
 import com.example.keepnote.dao.TrashDao
+import com.example.keepnote.entity.Note
+import com.example.keepnote.entity.Trash
 import kotlinx.coroutines.launch
 
 class TrashViewModel(private val trashDao: TrashDao, private val noteDao: NoteDao) : ViewModel() {

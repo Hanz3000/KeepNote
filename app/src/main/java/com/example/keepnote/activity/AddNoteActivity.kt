@@ -8,7 +8,12 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import com.example.keepnote.NoteApplication
 import com.example.keepnote.R
+import com.example.keepnote.databinding.ActivityAddNoteBinding
+import com.example.keepnote.entity.Note
+import com.example.keepnote.viewmodel.NoteViewModel
+import com.example.keepnote.viewmodel.NoteViewModelFactory
 import kotlin.getValue
 
 class AddNoteActivity : AppCompatActivity() {

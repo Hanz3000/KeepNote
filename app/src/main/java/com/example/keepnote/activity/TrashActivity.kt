@@ -9,7 +9,12 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.keepnote.NoteApplication
 import com.example.keepnote.R
+import com.example.keepnote.adapter.TrashAdapter
+import com.example.keepnote.entity.Trash
+import com.example.keepnote.viewmodel.TrashViewModel
+import com.example.keepnote.viewmodel.TrashViewModelFactory
 
 class TrashActivity : AppCompatActivity() {
 

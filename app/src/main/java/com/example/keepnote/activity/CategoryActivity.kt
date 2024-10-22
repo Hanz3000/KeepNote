@@ -7,7 +7,12 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import com.example.keepnote.NoteApplication
 import com.example.keepnote.R
+import com.example.keepnote.databinding.ActivityAddCategoryBinding
+import com.example.keepnote.entity.Category
+import com.example.keepnote.viewmodel.CategoryViewModel
+import com.example.keepnote.viewmodel.CategoryViewModelFactory
 import kotlin.getValue
 
 class CategoryActivity : AppCompatActivity() {

@@ -7,6 +7,9 @@ import androidx.room.RoomDatabase
 import com.example.keepnote.dao.CategoryDao
 import com.example.keepnote.dao.NoteDao
 import com.example.keepnote.dao.TrashDao
+import com.example.keepnote.entity.Category
+import com.example.keepnote.entity.Note
+import com.example.keepnote.entity.Trash
 
 @Database(entities = [Note::class, Category::class, Trash::class], version = 3)
 abstract class AppDatabase : RoomDatabase() {
