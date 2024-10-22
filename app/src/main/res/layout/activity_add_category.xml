@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.example.keepnote.viewmodel.CategoryViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp">
+
+        <EditText
+            android:id="@+id/editTextCategoryName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="Nama Kategori"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="TouchTargetSizeCheck" />
+
+        <Button
+            android:id="@+id/btnSimpan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Simpan"
+            app:layout_constraintTop_toBottomOf="@id/editTextCategoryName"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="16dp" />
+
+        <Button
+            android:id="@+id/btnBatal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Batal"
+            app:layout_constraintTop_toBottomOf="@id/editTextCategoryName"
+            app:layout_constraintStart_toEndOf="@id/btnSimpan"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
