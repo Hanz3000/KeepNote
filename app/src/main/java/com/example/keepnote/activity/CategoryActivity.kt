@@ -16,37 +16,49 @@ import com.example.keepnote.viewmodel.CategoryViewModelFactory
 import kotlin.getValue
 
 class CategoryActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityAddCategoryBinding // Perbarui baris ini
+
+    // Binding untuk layout activity_add_category.xml
+    private lateinit var binding: ActivityAddCategoryBinding
+
+    // ViewModel untuk operasi terkait kategori
     private val categoryViewModel: CategoryViewModel by viewModels {
+        // Menggunakan CategoryViewModelFactory untuk menginisialisasi ViewModel dengan DAO kategori
         CategoryViewModelFactory((application as NoteApplication).database.categoryDao())
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Mengatur Data Binding
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_add_category) // Perbarui baris ini
+        // Mengatur Data Binding dengan layout activity_add_category.xml
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_add_category)
 
-        // Menangani klik pada tombol Simpan untuk menambah kategori
+        // Event handler untuk tombol Simpan, digunakan untuk menambah kategori baru
         binding.btnSimpan.setOnClickListener {
+            // Mengambil input nama kategori dari pengguna
             val categoryName = binding.editTextCategoryName.text.toString().trim()
+
+            // Memastikan nama kategori tidak kosong
             if (categoryName.isNotEmpty()) {
-                // Menyimpan kategori baru ke database
+                // Menambahkan kategori baru ke database melalui ViewModel
                 categoryViewModel.insert(Category(name = categoryName))
 
-                // Mengembalikan hasil ke AddNoteActivity
+                // Mengirim hasil ke AddNoteActivity menggunakan Intent
                 val resultIntent = Intent()
                 resultIntent.putExtra("NEW_CATEGORY_NAME", categoryName)
                 setResult(Activity.RESULT_OK, resultIntent)
-                finish() // Tutup CategoryActivity
+
+                // Menutup CategoryActivity setelah menyimpan kategori
+                finish()
             } else {
+                // Menampilkan pesan kesalahan jika nama kategori kosong
                 Toast.makeText(this, "Nama kategori tidak boleh kosong", Toast.LENGTH_SHORT).show()
             }
         }
 
-        // Menangani klik pada tombol Batal
+        // Event handler untuk tombol Batal, digunakan untuk membatalkan penambahan kategori
         binding.btnBatal.setOnClickListener {
-            finish() // Tutup CategoryActivity tanpa menyimpan
+            // Menutup CategoryActivity tanpa menyimpan data
+            finish()
         }
     }
 }
