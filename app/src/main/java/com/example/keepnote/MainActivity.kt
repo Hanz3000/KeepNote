@@ -76,11 +76,11 @@ class MainActivity : AppCompatActivity() {
             override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean = false
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val note = adapter.getNoteAt(viewHolder.adapterPosition) // Mendapatkan catatan yang di-swipe
+                val note = adapter.getNoteAt(viewHolder.adapterPosition)
                 showDeleteNoteDialog(note, adapter, viewHolder.adapterPosition) // Menampilkan dialog konfirmasi penghapusan
             }
         }
-        ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(binding.recyclerView) // Menghubungkan ItemTouchHelper ke RecyclerView
+        ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(binding.recyclerView)
     }
 
     private fun setupCategorySpinner(adapter: NoteAdapter) {

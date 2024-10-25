@@ -16,6 +16,7 @@ import com.example.keepnote.viewmodel.NoteViewModel
 import com.example.keepnote.viewmodel.NoteViewModelFactory
 import kotlin.getValue
 
+@Suppress("DEPRECATION")
 class AddNoteActivity : AppCompatActivity() {
 
     // Binding untuk layout activity_add_note.xml
@@ -64,9 +65,10 @@ class AddNoteActivity : AppCompatActivity() {
         // Event handler untuk tombol Simpan
         binding.btnSimpan.setOnClickListener {
             // Mengambil input dari pengguna
+            val selectedCategory = binding.spinnerCategory.selectedItem.toString()
             val title = binding.editTextTitle.text.toString().trim()
             val content = binding.editTextContent.text.toString().trim()
-            val selectedCategory = binding.spinnerCategory.selectedItem.toString()
+
 
             // Validasi input - semua field harus diisi
             if (title.isEmpty() || content.isEmpty() || selectedCategory == "Pilih Kategori") {

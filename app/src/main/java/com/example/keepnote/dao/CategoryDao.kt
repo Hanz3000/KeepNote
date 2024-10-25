@@ -25,11 +25,6 @@ interface CategoryDao {
     @Query("SELECT * FROM categories ORDER BY name ASC")
     fun getAllCategories(): LiveData<List<Category>>
 
-    // Menambahkan fungsi sinkron untuk mengambil semua nama kategori
-    // Fungsi ini dijalankan di thread yang mendukung suspend dan mengembalikan daftar nama kategori secara sinkron
-    @Query("SELECT name FROM categories ORDER BY name ASC")
-    suspend fun getAllCategoriesSync(): List<String>
-
     // Mengambil semua kategori dan mengembalikannya sebagai array
     // Ini adalah fungsi sinkron yang mengembalikan seluruh isi tabel kategori
     @Query("SELECT * FROM categories")
