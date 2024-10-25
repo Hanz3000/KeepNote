@@ -75,7 +75,7 @@ class NoteViewModel(
     fun deleteCategory(categoryName: String) {
         viewModelScope.launch {
             categoryDao.deleteByName(categoryName)
-            // Opsional: Memindahkan catatan dengan kategori yang dihapus ke kategori default atau hapus
+
             noteDao.updateCategoryToDefault(categoryName)
         }
     }

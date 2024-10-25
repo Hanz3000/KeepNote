@@ -39,7 +39,7 @@ interface NoteDao {
     fun getUncategorizedNotes(): LiveData<List<Note>>
 
     // Mengubah kategori catatan yang sesuai dengan kategori lama menjadi 'Uncategorized'
-    @Query("UPDATE notes SET category = 'Uncategorized' WHERE category = :oldCategory")
+    @Query("UPDATE notes SET category = 'Tidak Ada Kategori' WHERE category = :oldCategory")
     suspend fun updateCategoryToDefault(oldCategory: String)
 
     // Mengambil semua catatan dan mengembalikannya sebagai array
