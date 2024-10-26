@@ -10,7 +10,7 @@ import com.example.keepnote.entity.Trash
 @Dao
 interface TrashDao {
 
-    // Menyisipkan catatan yang dihapus ke dalam tabel trash
+    // Menyisipkan catatan yang dihapus ke dalam tabel trash yang berada pada halaman riwayat hapus
     @Insert
     suspend fun insert(trash: Trash)
 
@@ -18,7 +18,7 @@ interface TrashDao {
     @Query("SELECT * FROM trash")
     fun getAllTrash(): LiveData<List<Trash>> // Menggunakan LiveData untuk perubahan otomatis di UI
 
-    // Menghapus catatan dari tabel trash berdasarkan ID
+    // Menghapus catatan dari tabel trash berdasarkan ID (menghapus satu baris data dari tabel trash)
     @Query("DELETE FROM trash WHERE id = :trashId")
     suspend fun deleteById(trashId: Long)
 
@@ -27,7 +27,7 @@ interface TrashDao {
     @Query("DELETE FROM trash WHERE id = :trashId")
     suspend fun permanentlyDelete(trashId: Long)
 
-    // Mengambil semua catatan dari tabel trash sebagai array (versi sinkron)
+    // Mengambil semua catatan dari tabel trash sebagai array
     @Query("SELECT * FROM trash")
     fun getAll(): Array<Trash>
 }

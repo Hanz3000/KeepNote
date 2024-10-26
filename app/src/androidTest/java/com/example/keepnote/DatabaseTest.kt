@@ -5,7 +5,9 @@ import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.keepnote.dao.CategoryDao
+import com.example.keepnote.dao.NoteDao
 import com.example.keepnote.entity.Category
+import com.example.keepnote.entity.Note
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -16,9 +18,14 @@ import java.io.IOException
 class DatabaseTest {
     private lateinit var categoryDao: CategoryDao // DAO untuk tabel Category
     private lateinit var db: AppDatabase // Objek database Room
+    private lateinit var noteDao: NoteDao // DAO untuk tabel Note
+
 
     // Objek contoh untuk tes
     private val category = Category(1, "Belajar")
+    private val note = Note(1, "Mobile", "Kotlin", "Belajar", "2024-10-21 15:52:00")
+
+
 
     @Before
     fun createDb() {
@@ -29,6 +36,8 @@ class DatabaseTest {
             .build()
         // Menginisialisasi objek DAO
         categoryDao = db.categoryDao()
+        noteDao = db.noteDao()
+
     }
 
     @After
@@ -55,4 +64,13 @@ class DatabaseTest {
         assert(result.isEmpty()) // Memastikan bahwa tabel kosong setelah penghapusan
         //farhan boss
     }
+
+    @Test
+    @Throws(Exception::class)
+    fun insertAndRetrieveNote(){
+        noteDao.insert(note) // Menyisipkan catatan ke dalam tabel
+        val result = noteDao.getAll() // Mengambil semua catatan dari tabel
+        assert(result.size == 1) // Memastikan bahwa ukuran data yang diterima sama dengan 1
+        }
+    // Novan
 }
