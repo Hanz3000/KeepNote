@@ -73,4 +73,15 @@ class DatabaseTest {
         assert(result.size == 1) // Memastikan bahwa ukuran data yang diterima sama dengan 1
         }
     // Novan
+
+
+    //Diva
+    @Test
+    @kotlin.jvm.Throws(Exception::class)
+    fun deletebyId() {
+        noteDao.insert(note)
+        noteDao.deleteById(note.id)
+        val result = noteDao.getAll()
+        assert(result.isEmpty())
+    }
 }

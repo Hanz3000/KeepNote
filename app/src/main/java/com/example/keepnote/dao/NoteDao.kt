@@ -23,7 +23,7 @@ interface NoteDao {
 
     // Menghapus catatan dari database berdasarkan ID catatan
     @Query("DELETE FROM notes WHERE id = :noteId")
-    suspend fun deleteById(noteId: Long)
+    fun deleteById(noteId: Long)
 
     // Memperbarui judul, isi, dan kategori catatan berdasarkan ID
     @Query("UPDATE notes SET title = :title, content = :content, category = :category WHERE id = :noteId")
