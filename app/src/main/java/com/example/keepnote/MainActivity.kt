@@ -63,6 +63,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+
         // Mengatur onClickListener untuk FAB tempat sampah
         binding.fabTrash.setOnClickListener {
             val intent = Intent(this, TrashActivity::class.java)
