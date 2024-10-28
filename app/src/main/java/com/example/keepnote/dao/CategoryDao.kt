@@ -14,11 +14,11 @@ interface CategoryDao {
     // Menyisipkan atau memperbarui kategori ke dalam database
     // Jika kategori sudah ada (berdasarkan nama), data akan digantikan karena menggunakan strategi REPLACE
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(category: Category)
+     fun insert(category: Category)
 
     // Menghapus kategori berdasarkan nama
     @Query("DELETE FROM categories WHERE name = :categoryName")
-    suspend fun deleteByName(categoryName: String)
+     fun deleteByName(categoryName: String)
 
     // Mengambil semua kategori dalam urutan abjad dan mengembalikannya sebagai LiveData
     // LiveData memungkinkan pengamatan pada perubahan data secara real-time

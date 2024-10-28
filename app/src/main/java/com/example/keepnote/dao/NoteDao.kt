@@ -14,7 +14,7 @@ interface NoteDao {
     // Menyisipkan atau memperbarui catatan ke dalam database
     // Jika catatan dengan ID yang sama sudah ada, catatan lama akan diganti karena menggunakan strategi REPLACE
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(note: Note)
+     fun insert(note: Note)
 
     // Mengambil semua catatan dan mengembalikan sebagai LiveData
     // Data akan diurutkan berdasarkan ID secara descending (dari terbaru ke terlama)
@@ -23,7 +23,7 @@ interface NoteDao {
 
     // Menghapus catatan dari database berdasarkan ID catatan
     @Query("DELETE FROM notes WHERE id = :noteId")
-    suspend fun deleteById(noteId: Long)
+     fun deleteById(noteId: Long)
 
     // Memperbarui judul, isi, dan kategori catatan berdasarkan ID
     @Query("UPDATE notes SET title = :title, content = :content, category = :category WHERE id = :noteId")

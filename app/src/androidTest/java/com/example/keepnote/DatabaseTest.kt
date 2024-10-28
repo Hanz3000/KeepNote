@@ -6,8 +6,10 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.keepnote.dao.CategoryDao
 import com.example.keepnote.dao.NoteDao
+import com.example.keepnote.dao.TrashDao
 import com.example.keepnote.entity.Category
 import com.example.keepnote.entity.Note
+import com.example.keepnote.entity.Trash
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -16,16 +18,16 @@ import java.io.IOException
 
 @RunWith(AndroidJUnit4::class)
 class DatabaseTest {
-    private lateinit var categoryDao: CategoryDao // DAO untuk tabel Category
     private lateinit var db: AppDatabase // Objek database Room
     private lateinit var noteDao: NoteDao // DAO untuk tabel Note
+    private lateinit var categoryDao: CategoryDao // DAO untuk tabel Category
+    private lateinit var trashDao: TrashDao
 
 
     // Objek contoh untuk tes
     private val category = Category(1, "Belajar")
     private val note = Note(1, "Mobile", "Kotlin", "Belajar", "2024-10-21 15:52:00")
-
-
+    private val trash = Trash(1, 1, 21 - 10 - 2024, "Mobile", "Kotlin", "Belajar")
 
     @Before
     fun createDb() {
@@ -37,6 +39,7 @@ class DatabaseTest {
         // Menginisialisasi objek DAO
         categoryDao = db.categoryDao()
         noteDao = db.noteDao()
+        trashDao = db.trashDao()
 
     }
 
@@ -83,5 +86,13 @@ class DatabaseTest {
         noteDao.deleteById(note.id)
         val result = noteDao.getAll()
         assert(result.isEmpty())
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun insertAndRetrieveTrash(){
+        trashDao.insert(trash)
+        val result = trashDao.getAll()
+        assert(result.size == 1)
     }
 }

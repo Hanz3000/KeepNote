@@ -12,7 +12,7 @@ interface TrashDao {
 
     // Menyisipkan catatan yang dihapus ke dalam tabel trash yang berada pada halaman riwayat hapus
     @Insert
-    suspend fun insert(trash: Trash)
+    fun insert(trash: Trash)
 
     // Mengambil semua catatan yang ada di dalam tabel trash dan mengembalikannya sebagai LiveData
     @Query("SELECT * FROM trash")
@@ -23,7 +23,7 @@ interface TrashDao {
     suspend fun deleteById(trashId: Long)
 
     // Menghapus catatan secara permanen dari tabel trash berdasarkan ID
-    // Mirip dengan `deleteById`, tetapi biasanya digunakan untuk konfirmasi penghapusan permanen
+    // Mirip dengan deleteById, tetapi biasanya digunakan untuk konfirmasi penghapusan permanen
     @Query("DELETE FROM trash WHERE id = :trashId")
     suspend fun permanentlyDelete(trashId: Long)
 

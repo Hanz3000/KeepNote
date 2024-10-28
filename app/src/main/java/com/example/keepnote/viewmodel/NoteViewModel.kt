@@ -64,7 +64,7 @@ class NoteViewModel(
                     deletedDate = System.currentTimeMillis(),
                     title = note.title,
                     content = note.content,
-                    category = note.category // Menyertakan kategori dalam tempat sampah
+                    category = note.category,
                 )
             )
             noteDao.deleteById(note.id)

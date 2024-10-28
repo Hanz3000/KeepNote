@@ -12,5 +12,5 @@ data class Trash(
     val title: String, // Kolom untuk menyimpan judul catatan yang dihapus
     val content: String, // Kolom untuk menyimpan isi catatan yang dihapus
     val category: String, // Kolom untuk kategori dari catatan yang dihapus
-    val isPermanentlyDeleted: Boolean = false // Status untuk menentukan apakah catatan dihapus secara permanen
+    val isPermanentlyDeleted: Boolean = false, // Status untuk menentukan apakah catatan dihapus secara permanen
 )
