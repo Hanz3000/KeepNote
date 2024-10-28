@@ -18,7 +18,7 @@ class NoteViewModel(
     private val trashDao: TrashDao
 ) : ViewModel() {
 
-    // Mengambil semua catatan dari database
+    // Mengambil semua catatan dari database di tampilkan ke main actiity
     val allNotes: LiveData<List<Note>> = noteDao.getAllNotes()
 
     // Mengambil catatan berdasarkan kategori
@@ -29,14 +29,14 @@ class NoteViewModel(
     // Menambahkan catatan baru
     fun insert(note: Note) {
         viewModelScope.launch {
-            noteDao.insert(note)
+            noteDao.insert(note) //memanggil dao untuk menyimpan catatan
         }
     }
 
     // Memperbarui catatan yang sudah ada
     fun update(note: Note) {
         viewModelScope.launch {
-            noteDao.updateNote(note.id, note.title, note.content, note.category)
+            noteDao.updateNote(note.id, note.title, note.content, note.category) //mengupdate dari addnote untuk menyimpannya ke dao
         }
     }
 

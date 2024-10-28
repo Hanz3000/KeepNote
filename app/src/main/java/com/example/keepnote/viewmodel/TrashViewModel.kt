@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 
 class TrashViewModel(private val trashDao: TrashDao, private val noteDao: NoteDao) : ViewModel() {
 
-    // LiveData untuk mengambil semua data yang ada di trash
+    // LiveData untuk mengambil semua data yang ada di trash, mengambil semua trah di trash dao
     val allTrash: LiveData<List<Trash>> = trashDao.getAllTrash()
 
     // Fungsi untuk memulihkan catatan dari trash ke notes

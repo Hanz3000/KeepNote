@@ -38,15 +38,17 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Mengatur binding dan ViewModel
+        // Mengatur binding untuk menghubungkan layout activity_main.xml dengan kode di MainActivity
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        // Menyambungkan ViewModel dengan binding, sehingga ViewModel dapat diakses langsung dari layout XML
         binding.viewModel = noteViewModel
-        binding.lifecycleOwner = this // Menentukan lifecycle owner untuk data binding
+        // Menentukan lifecycle owner untuk binding, sehingga UI dapat otomatis ter-update sesuai lifecycle
+        binding.lifecycleOwner = this
 
         // Inisialisasi adapter dan layout manager untuk RecyclerView
-        val adapter = NoteAdapter { note -> onNoteClick(note) }
-        binding.recyclerView.layoutManager = LinearLayoutManager(this)
-        binding.recyclerView.adapter = adapter
+        val adapter = NoteAdapter { note -> onNoteClick(note) } // Ketika item diklik, akan memanggil fungsi onNoteClick dengan data note
+        binding.recyclerView.layoutManager = LinearLayoutManager(this)  // LinearLayoutManager akan menampilkan item dalam daftar vertikal (seperti daftar sederhana)
+        binding.recyclerView.adapter = adapter // Adapter bertugas menyediakan data catatan ke RecyclerView  mengontrol bagaimana item tampil
 
         setupItemTouchHelper(adapter) // Mengatur swipe untuk menghapus catatan
         setupCategorySpinner(adapter) // Mengatur spinner kategori
@@ -57,7 +59,7 @@ class MainActivity : AppCompatActivity() {
             updateEmptyView(notes.isEmpty()) // Memperbarui tampilan kosong
         }
 
-        // Mengatur onClickListener untuk FAB menambah catatan
+        //  Ketika pengguna menekan tombol FAB, AddNoteActivity terbuka.
         binding.fab.setOnClickListener {
             val intent = Intent(this, AddNoteActivity::class.java)
             startActivity(intent)
@@ -71,21 +73,21 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupItemTouchHelper(adapter: NoteAdapter) {
+    private fun setupItemTouchHelper(adapter: NoteAdapter) { //mengatur mekanisme swipe pada item RecyclerView untuk menghapus catatan.
         // Mengatur swipe gesture untuk menghapus catatan
         val itemTouchHelperCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
             override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean = false
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val note = adapter.getNoteAt(viewHolder.adapterPosition)
-                showDeleteNoteDialog(note, adapter, viewHolder.adapterPosition) // Menampilkan dialog konfirmasi penghapusan
+                showDeleteNoteDialog(note, adapter, viewHolder.adapterPosition) //onSwiped akan dipanggil untuk mengambil catatan yang dipilih dari adapter dan menampilkan dialog konfirmasi hapus.
             }
         }
         ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(binding.recyclerView)
     }
 
     private fun setupCategorySpinner(adapter: NoteAdapter) {
-        categorySpinner = binding.categorySpinner // Mengambil referensi Spinner
+        categorySpinner = binding.categorySpinner // diambil dari spiner
 
         // Mengamati daftar kategori dan memperbarui adapter Spinner
         noteViewModel.getAllCategories().observe(this) { categories ->
@@ -176,14 +178,15 @@ class MainActivity : AppCompatActivity() {
         binding.recyclerView.visibility = if (isEmpty) View.GONE else View.VISIBLE // Menampilkan atau menyembunyikan RecyclerView
     }
 
+    // Menangani klik pada catatan untuk mengeditnya
     private fun onNoteClick(note: Note) {
-        // Menangani klik pada catatan untuk mengeditnya
+        // Memindahkan ke AddNoteActivity dengan data catatan yang ingin diedit
         val intent = Intent(this, AddNoteActivity::class.java).apply {
             putExtra("NOTE_ID", note.id) // Mengirim ID catatan
             putExtra("NOTE_TITLE", note.title) // Mengirim judul catatan
             putExtra("NOTE_CONTENT", note.content) // Mengirim konten catatan
             putExtra("NOTE_CATEGORY", note.category) // Mengirim kategori catatan
-            putExtra("IS_EDIT", true) // Menandakan bahwa ini adalah mode edit
+            putExtra("IS_EDIT", true) // mengirim nilai bollean true yang Menandakan bahwa ini adalah mode edit
         }
         startActivity(intent) // Memulai aktivitas untuk mengedit catatan
     }

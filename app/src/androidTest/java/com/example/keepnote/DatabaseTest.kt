@@ -70,7 +70,7 @@ class DatabaseTest {
     fun insertAndRetrieveNote(){
         noteDao.insert(note) // Menyisipkan catatan ke dalam tabel
         val result = noteDao.getAll() // Mengambil semua catatan dari tabel
-        assert(result.size == 1) // Memastikan bahwa ukuran data yang diterima sama dengan 1
+        assert(result.size == 1) // Memastikan bahwa ukuran data yang diterima sama dengan 1
         }
     // Novan
 

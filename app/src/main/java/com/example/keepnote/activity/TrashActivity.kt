@@ -24,7 +24,6 @@ class TrashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_trash)
-
         // Mengambil DAO dari NoteApplication untuk menginisialisasi ViewModel
         val trashDao = (application as NoteApplication).database.trashDao()
         val noteDao = (application as NoteApplication).database.noteDao()

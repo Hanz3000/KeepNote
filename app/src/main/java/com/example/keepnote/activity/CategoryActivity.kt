@@ -39,10 +39,10 @@ class CategoryActivity : AppCompatActivity() {
 
             // Memastikan nama kategori tidak kosong
             if (categoryName.isNotEmpty()) {
-                // Menambahkan kategori baru ke database melalui ViewModel
+                // Menambahkan kategori baru ke database melalui ViewModel MENGIRIM KE VIEW MODEL
                 categoryViewModel.insert(Category(name = categoryName))
 
-                // Mengirim hasil ke AddNoteActivity menggunakan Intent
+                // Mengirim hasil ke AddNoteActivity menggunakan Intent menggunakann putexstara
                 val resultIntent = Intent()
                 resultIntent.putExtra("NEW_CATEGORY_NAME", categoryName)
                 setResult(Activity.RESULT_OK, resultIntent)

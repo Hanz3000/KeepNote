@@ -46,8 +46,8 @@ class AddNoteActivity : AppCompatActivity() {
         // Mengatur Data Binding dengan layout activity_add_note.xml
         binding = DataBindingUtil.setContentView(this, R.layout.activity_add_note)
 
-        // Mengambil data dari Intent jika ada (untuk edit catatan)
-        val isEdit = intent.getBooleanExtra("IS_EDIT", false)
+        // Mengambil atau menerima data dari main activity
+        val isEdit = intent.getBooleanExtra("IS_EDIT", false) //jika bernilai false maka akan menambahkan catatan baru
         val noteId = intent.getLongExtra("NOTE_ID", -1L)
         val noteTitle = intent.getStringExtra("NOTE_TITLE") ?: ""
         val noteContent = intent.getStringExtra("NOTE_CONTENT") ?: ""
@@ -62,19 +62,18 @@ class AddNoteActivity : AppCompatActivity() {
         // Mengatur spinner untuk menampilkan kategori, dengan kategori terpilih jika ada
         setupCategorySpinner(noteCategory)
 
-        // Event handler untuk tombol Simpan
+        // Event handler untuk tombol Simpan fungsi untuk menyimpan inputan
         binding.btnSimpan.setOnClickListener {
             // Mengambil input dari pengguna
             val selectedCategory = binding.spinnerCategory.selectedItem.toString()
             val title = binding.editTextTitle.text.toString().trim()
             val content = binding.editTextContent.text.toString().trim()
 
-
             // Validasi input - semua field harus diisi
             if (title.isEmpty() || content.isEmpty() || selectedCategory == "Pilih Kategori") {
                 Toast.makeText(this, "Judul, isi, dan kategori tidak boleh kosong", Toast.LENGTH_SHORT).show()
             } else {
-                if (isEdit && noteId != -1L) {
+                if (isEdit && noteId != -1L) { //jika benar maka akan mengupdate
                     // Mengupdate catatan yang sudah ada
                     noteViewModel.update(Note(noteId, title, content, selectedCategory))
                     Toast.makeText(this, "Catatan berhasil diubah", Toast.LENGTH_SHORT).show()
@@ -88,15 +87,15 @@ class AddNoteActivity : AppCompatActivity() {
             }
         }
 
-        // Event handler untuk tombol tambah kategori
+//        1. Event handler untuk tombol tambah kategori
         binding.buttonAddCategory.setOnClickListener {
             // Memulai CategoryActivity untuk menambah kategori baru
             val intent = Intent(this, CategoryActivity::class.java)
-            startActivityForResult(intent, REQUEST_CODE_ADD_CATEGORY)
+            startActivityForResult(intent, REQUEST_CODE_ADD_CATEGORY) //dimulai dengan startactivity
         }
     }
 
-    // Mengatur spinner kategori dengan kategori yang ada dari database
+    // Menampilkan Kategori di Halaman Input (AddNoteActivity)
     private fun setupCategorySpinner(selectedCategory: String) {
         // Mengamati kategori yang disimpan di ViewModel
         noteViewModel.getAllCategoryNames().observe(this) { categoryNames ->
@@ -110,9 +109,9 @@ class AddNoteActivity : AppCompatActivity() {
             categories.add(0, "Pilih Kategori")
 
             // Inisialisasi adapter untuk spinner kategori
-            categoryAdapter = ArrayAdapter(this@AddNoteActivity, android.R.layout.simple_spinner_item, categories)
-            categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            binding.spinnerCategory.adapter = categoryAdapter
+            categoryAdapter = ArrayAdapter(this@AddNoteActivity, android.R.layout.simple_spinner_item, categories) //menghubungkan ke spiner
+            categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item) //menetapkan dropdown
+            binding.spinnerCategory.adapter = categoryAdapter //menghubungkan adaptercategori ke spiner kategori
 
             // Menetapkan kategori yang dipilih jika sedang mengedit catatan
             selectCategory(selectedCategory)
@@ -129,7 +128,7 @@ class AddNoteActivity : AppCompatActivity() {
         }
     }
 
-    // Menerima hasil dari aktivitas lain, seperti menambah kategori
+    // Menerima hasil dari aktivitas dari category activity , MEMANGGIL ON ACTIVITY RESULT UNTUK MENERIMA seperti menambah kategori
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE_ADD_CATEGORY && resultCode == Activity.RESULT_OK) {
