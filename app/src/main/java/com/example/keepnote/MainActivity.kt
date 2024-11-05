@@ -24,17 +24,16 @@ import com.example.keepnote.viewmodel.NoteViewModelFactory
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityMainBinding // Binding untuk layout
+    private lateinit var binding: ActivityMainBinding // Binding untuk layout tanpa menggunakan find by id
     private lateinit var categorySpinner: Spinner // Spinner untuk memilih kategori
-    private lateinit var categoryAdapter: ArrayAdapter<String> // Adapter untuk kategori
-    private val noteViewModel: NoteViewModel by viewModels { // Inisialisasi ViewModel
+    private lateinit var categoryAdapter: ArrayAdapter<String> // Adapter untuk daftar kategori
+    private val noteViewModel: NoteViewModel by viewModels { // Inisialisasi ViewModel untuk mengelola dan menyediakan data catatan
         NoteViewModelFactory(
             (application as NoteApplication).database.noteDao(),
             (application as NoteApplication).database.categoryDao(),
             (application as NoteApplication).database.trashDao()
         )
     }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -51,7 +50,7 @@ class MainActivity : AppCompatActivity() {
         binding.recyclerView.adapter = adapter // Adapter bertugas menyediakan data catatan ke RecyclerView  mengontrol bagaimana item tampil
 
         setupItemTouchHelper(adapter) // Mengatur swipe untuk menghapus catatan
-        setupCategorySpinner(adapter) // Mengatur spinner kategori
+        setupCategorySpinner(adapter) // Mengatur spinner kategori dan memfilter catatan
 
         // Mengamati perubahan pada daftar catatan dan memperbarui adapter
         noteViewModel.allNotes.observe(this) { notes ->
@@ -60,7 +59,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         //  Ketika pengguna menekan tombol FAB, AddNoteActivity terbuka.
-        binding.fab.setOnClickListener {
+        binding.fabaddnote.setOnClickListener {
             val intent = Intent(this, AddNoteActivity::class.java)
             startActivity(intent)
         }
@@ -86,24 +85,24 @@ class MainActivity : AppCompatActivity() {
         ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(binding.recyclerView)
     }
 
+    // 1.filter
     private fun setupCategorySpinner(adapter: NoteAdapter) {
-        categorySpinner = binding.categorySpinner // diambil dari spiner
+        categorySpinner = binding.categorySpinner // Ambil spinner dari layout
 
         // Mengamati daftar kategori dan memperbarui adapter Spinner
         noteViewModel.getAllCategories().observe(this) { categories ->
-            val allCategories = mutableListOf("Semua").apply { addAll(categories) } // Menambahkan opsi "Semua" ke daftar kategori
-            categoryAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, allCategories).apply {
+            val allCategories = mutableListOf("Semua").apply { addAll(categories) } // Menambahkan opsi "Semua" ke daftar kategori sehingga pengguna dapat melihat semua note
+            categoryAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, allCategories).apply { //Membuat ArrayAdapter untuk menampilkan daftar kategori di Spinner.
                 setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item) // Mengatur layout untuk dropdown
             }
             categorySpinner.adapter = categoryAdapter // Mengatur adapter untuk Spinner
-
             // Mengatur listener untuk pilihan kategori
-            categorySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            categorySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener { //untuk menangani perubahan pada kategori yang dipilih.
+
                 override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                     val selectedCategory = categorySpinner.selectedItem.toString() // Mendapatkan kategori yang dipilih
-                    filterNotesByCategory(selectedCategory, adapter) // Memfilter catatan berdasarkan kategori
+                    filterNotesByCategory(selectedCategory, adapter) // saat category dipilih maka akan Memfilter catatan berdasarkan kategori
                 }
-
                 override fun onNothingSelected(parent: AdapterView<*>) {
                     // Jika tidak ada kategori yang dipilih, tampilkan semua catatan
                     noteViewModel.allNotes.observe(this@MainActivity) { notes ->
@@ -113,7 +112,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-            // Menangani long click pada kategori untuk menghapus kategori
+            //1. Menangani long click pada kategori untuk menghapus kategori
             categorySpinner.setOnLongClickListener {
                 val selectedCategory = categorySpinner.selectedItem.toString()
                 if (selectedCategory != "Semua") {
@@ -123,7 +122,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
+    //2. Filter Catatan Berdasarkan Kategori (filterNotesByCategory)
     private fun filterNotesByCategory(category: String, adapter: NoteAdapter) {
         // Memfilter catatan berdasarkan kategori yang dipilih
         when (category) {
@@ -132,9 +131,10 @@ class MainActivity : AppCompatActivity() {
                 updateEmptyView(notes.isEmpty()) // Memperbarui tampilan kosong
             }
             else -> {
+                // Jika kategori tertentu dipilih, tampilkan catatan sesuai kategori
                 noteViewModel.getNotesByCategory(category).observe(this@MainActivity) { notes ->
                     adapter.setNotes(notes)
-                    updateEmptyView(notes.isEmpty()) // Memperbarui tampilan kosong
+                    updateEmptyView(notes.isEmpty()) // Memperbarui tampilan kosong jika tidak ada catatan maka akan muncul pesan kosong
                 }
             }
         }
@@ -157,7 +157,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showDeleteCategoryDialog(categoryName: String) {
-        // Menampilkan dialog konfirmasi untuk menghapus kategori
+        //2. Menampilkan dialog konfirmasi untuk menghapus kategori
         AlertDialog.Builder(this)
             .setTitle("Hapus Kategori")
             .setMessage("Apakah Anda yakin ingin menghapus kategori '$categoryName'?")
@@ -166,16 +166,17 @@ class MainActivity : AppCompatActivity() {
             .show()
     }
 
-    private fun deleteCategory(categoryName: String) {
+    //3.hapus kategori dari aler iya
+    private fun deleteCategory(categoryName: String) { //deleate kategori
         noteViewModel.deleteCategory(categoryName) // Menghapus kategori
         Toast.makeText(this, "Kategori '$categoryName' telah dihapus", Toast.LENGTH_SHORT).show() // Menampilkan pesan konfirmasi
         categorySpinner.setSelection(0) // Reset pilihan Spinner ke "Semua" setelah menghapus kategori
     }
 
     private fun updateEmptyView(isEmpty: Boolean) {
-        // Memperbarui tampilan berdasarkan apakah ada catatan
+        // 3. Memperbarui tampilan berdasarkan apakah ada catatan
         binding.emptyView.visibility = if (isEmpty) View.VISIBLE else View.GONE // Menampilkan atau menyembunyikan tampilan kosong
-        binding.recyclerView.visibility = if (isEmpty) View.GONE else View.VISIBLE // Menampilkan atau menyembunyikan RecyclerView
+        binding.recyclerView.visibility = if (isEmpty) View.GONE else View.VISIBLE // Menampilkan note atau menyembunyikan note dari RecyclerView
     }
 
     // Menangani klik pada catatan untuk mengeditnya

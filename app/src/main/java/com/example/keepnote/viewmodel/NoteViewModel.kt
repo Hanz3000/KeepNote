@@ -40,7 +40,7 @@ class NoteViewModel(
         }
     }
 
-    // Mengambil semua kategori dan mengembalikan nama-nama kategori
+    // Mengambil semua kategori dan mengembalikan nama-nama kategori ke activity main
     fun getAllCategories(): LiveData<List<String>> {
         return categoryDao.getAllCategories().map { categories ->
             categories.map { it.name } // Mengambil nama dari setiap kategori
@@ -71,12 +71,12 @@ class NoteViewModel(
         }
     }
 
-    // Menghapus kategori tertentu dan memperbarui catatan terkait
+    // Menghapus kategori tertentu dan memperbarui catatan terkait. terusan dari main activity alert iiya
     fun deleteCategory(categoryName: String) {
         viewModelScope.launch {
             categoryDao.deleteByName(categoryName)
 
-            noteDao.updateCategoryToDefault(categoryName)
+            noteDao.updateCategoryToDefault(categoryName) //mengirim ke semua
         }
     }
 }

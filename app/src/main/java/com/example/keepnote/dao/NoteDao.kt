@@ -14,7 +14,7 @@ interface NoteDao {
     // Menyisipkan atau memperbarui catatan ke dalam database
     // Jika catatan dengan ID yang sama sudah ada, catatan lama akan diganti karena menggunakan strategi REPLACE
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-     fun insert(note: Note)
+    suspend fun insert(note: Note)
 
     // Mengambil semua catatan dan mengembalikan sebagai LiveData
     // Data akan diurutkan berdasarkan ID secara descending (dari terbaru ke terlama)

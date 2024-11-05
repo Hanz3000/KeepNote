@@ -28,7 +28,6 @@ class TrashActivity : AppCompatActivity() {
         val trashDao = (application as NoteApplication).database.trashDao()
         val noteDao = (application as NoteApplication).database.noteDao()
         val factory = TrashViewModelFactory(trashDao, noteDao)
-
         // Menginisialisasi ViewModel menggunakan Factory
         trashViewModel = viewModels<TrashViewModel> { factory }.value
 
@@ -51,7 +50,7 @@ class TrashActivity : AppCompatActivity() {
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        // Mengamati perubahan data di ViewModel untuk memperbarui tampilan RecyclerView
+        // 1. Mengamati perubahan data di ViewModel untuk memperbarui tampilan RecyclerView
         trashViewModel.allTrash.observe(this) { trashList ->
             // Memperbarui data dalam adapter
             adapter.updateData(trashList)

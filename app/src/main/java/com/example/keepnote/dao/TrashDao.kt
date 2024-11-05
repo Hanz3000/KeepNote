@@ -12,7 +12,7 @@ interface TrashDao {
 
     // Menyisipkan catatan yang dihapus ke dalam tabel trash yang berada pada halaman riwayat hapus
     @Insert
-    fun insert(trash: Trash)
+    suspend fun insert(trash: Trash)
 
     // Mengambil semua catatan yang ada di dalam tabel trash dan mengembalikannya sebagai LiveData
     @Query("SELECT * FROM trash")

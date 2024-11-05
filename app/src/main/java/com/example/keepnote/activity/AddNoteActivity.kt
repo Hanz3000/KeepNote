@@ -33,7 +33,7 @@ class AddNoteActivity : AppCompatActivity() {
     }
 
     // Adapter untuk spinner kategori
-    private lateinit var categoryAdapter: ArrayAdapter<String>
+    private lateinit var categoryAdapter: ArrayAdapter<String> //akan mengelola daftar kategori yang ditampilkan di Spinner.
     private val categories: MutableList<String> = mutableListOf()
 
     companion object {
@@ -95,7 +95,7 @@ class AddNoteActivity : AppCompatActivity() {
         }
     }
 
-    // Menampilkan Kategori di Halaman Input (AddNoteActivity)
+    // 3. Menampilkan Kategori di Halaman Input (AddNoteActivity)
     private fun setupCategorySpinner(selectedCategory: String) {
         // Mengamati kategori yang disimpan di ViewModel
         noteViewModel.getAllCategoryNames().observe(this) { categoryNames ->
@@ -128,7 +128,7 @@ class AddNoteActivity : AppCompatActivity() {
         }
     }
 
-    // Menerima hasil dari aktivitas dari category activity , MEMANGGIL ON ACTIVITY RESULT UNTUK MENERIMA seperti menambah kategori
+    // 2. Menerima hasil dari aktivitas dari category activity , MEMANGGIL ON ACTIVITY RESULT UNTUK MENERIMA seperti menambah kategori
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE_ADD_CATEGORY && resultCode == Activity.RESULT_OK) {

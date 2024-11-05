@@ -14,7 +14,7 @@ interface CategoryDao {
     // Menyisipkan atau memperbarui kategori ke dalam database
     // Jika kategori sudah ada (berdasarkan nama), data akan digantikan karena menggunakan strategi REPLACE
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-     fun insert(category: Category)
+     suspend fun insert(category: Category)
 
     // Menghapus kategori berdasarkan nama
     @Query("DELETE FROM categories WHERE name = :categoryName")
