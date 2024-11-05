@@ -34,7 +34,7 @@ class TrashActivity : AppCompatActivity() {
         // Mengatur RecyclerView dan adapter untuk menampilkan catatan yang ada di trash (sampah)
         val recyclerView: RecyclerView = findViewById(R.id.recycler_view_trash)
         val adapter = TrashAdapter(
-            emptyList(),
+            //emptyList(),
             { trash ->
                 // Fungsi untuk memulihkan catatan dari trash
                 trashViewModel.recover(trash)
@@ -53,7 +53,7 @@ class TrashActivity : AppCompatActivity() {
         // 1. Mengamati perubahan data di ViewModel untuk memperbarui tampilan RecyclerView
         trashViewModel.allTrash.observe(this) { trashList ->
             // Memperbarui data dalam adapter
-            adapter.updateData(trashList)
+            adapter.submitList(trashList)
 
             // Menampilkan pesan "kosong" jika tidak ada catatan di trash
             findViewById<TextView>(R.id.empty_view).visibility =

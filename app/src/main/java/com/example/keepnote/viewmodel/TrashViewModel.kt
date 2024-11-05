@@ -7,6 +7,7 @@ import com.example.keepnote.dao.NoteDao
 import com.example.keepnote.dao.TrashDao
 import com.example.keepnote.entity.Note
 import com.example.keepnote.entity.Trash
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class TrashViewModel(private val trashDao: TrashDao, private val noteDao: NoteDao) : ViewModel() {
@@ -16,7 +17,7 @@ class TrashViewModel(private val trashDao: TrashDao, private val noteDao: NoteDa
 
     // Fungsi untuk memulihkan catatan dari trash ke notes
     fun recover(trash: Trash) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             // Memulihkan catatan ke tabel notes
             val recoveredNote = Note(
                 id = 0, // Biarkan Room generate ID baru

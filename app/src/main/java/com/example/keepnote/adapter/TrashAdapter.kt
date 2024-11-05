@@ -5,6 +5,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.keepnote.R
 import com.example.keepnote.entity.Trash
@@ -12,10 +14,10 @@ import java.util.Date
 
 // Adapter untuk RecyclerView yang menampilkan daftar catatan yang dihapus (Trash)
 class TrashAdapter(
-    private var trashList: List<Trash>, // Daftar catatan yang dihapus
+    //private var trashList: List<Trash>, // Daftar catatan yang dihapus
     private val onRecoverClick: (Trash) -> Unit, // Fungsi untuk menangani pemulihan catatan
     private val onDeleteClick: (Trash) -> Unit // Fungsi untuk menangani penghapusan permanen
-) : RecyclerView.Adapter<TrashAdapter.TrashViewHolder>() {
+) : ListAdapter<Trash, TrashAdapter.TrashViewHolder>(RowItemDiffCallback()) {
 
     // ViewHolder yang merepresentasikan setiap item catatan yang dihapus
     class TrashViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -36,7 +38,7 @@ class TrashAdapter(
 
     // Dipanggil untuk mengikat data catatan yang dihapus ke ViewHolder
     override fun onBindViewHolder(holder: TrashViewHolder, position: Int) {
-        val trash = trashList[position] // Mendapatkan catatan yang dihapus pada posisi saat ini
+        val trash = getItem(position) // Mendapatkan catatan yang dihapus pada posisi saat ini
 
         // Mengatur data untuk setiap catatan yang dihapus
         holder.textViewTitle.text = trash.title // Mengisi TextView judul dengan data catatan
@@ -52,11 +54,21 @@ class TrashAdapter(
     }
 
     // Mengembalikan jumlah catatan yang dihapus dalam daftar
-    override fun getItemCount(): Int = trashList.size
+    //override fun getItemCount(): Int = trashList.size
 
     // Memperbarui daftar catatan yang dihapus dengan data baru
-    fun updateData(newTrashList: List<Trash>) {
-        trashList = newTrashList // Mengganti daftar lama dengan daftar baru
-        notifyDataSetChanged() // Memberitahukan RecyclerView bahwa data telah berubah
+    //fun updateData(newTrashList: List<Trash>) {
+    //    trashList = newTrashList // Mengganti daftar lama dengan daftar baru
+    //    notifyDataSetChanged() // Memberitahukan RecyclerView bahwa data telah berubah
+    //}
+
+    class RowItemDiffCallback : DiffUtil.ItemCallback<Trash>(){
+        override fun areItemsTheSame(oldItem: Trash, newItem: Trash): Boolean {
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItem: Trash, newItem: Trash): Boolean {
+            return oldItem == newItem
+        }
     }
 }

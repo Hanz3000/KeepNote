@@ -9,6 +9,7 @@ import com.example.keepnote.dao.NoteDao
 import com.example.keepnote.dao.TrashDao
 import com.example.keepnote.entity.Note
 import com.example.keepnote.entity.Trash
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 // Kelas ini adalah ViewModel untuk mengelola catatan, kategori, dan tempat sampah
@@ -56,7 +57,7 @@ class NoteViewModel(
 
     // Menghapus catatan dan memindahkannya ke tempat sampah
     fun delete(note: Note) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             // Memindahkan catatan ke tempat sampah sebelum menghapus
             trashDao.insert(
                 Trash(
