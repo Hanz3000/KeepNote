@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity() {
 
         // Mengamati perubahan pada daftar catatan dan memperbarui adapter
         noteViewModel.allNotes.observe(this) { notes ->
-            adapter.setNotes(notes)
+            adapter.submitList(notes)
             updateEmptyView(notes.isEmpty()) // Memperbarui tampilan kosong
         }
 
@@ -78,7 +78,7 @@ class MainActivity : AppCompatActivity() {
             override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean = false
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val note = adapter.getNoteAt(viewHolder.adapterPosition)
+                val note = adapter.currentList[viewHolder.adapterPosition]
                 showDeleteNoteDialog(note, adapter, viewHolder.adapterPosition) //onSwiped akan dipanggil untuk mengambil catatan yang dipilih dari adapter dan menampilkan dialog konfirmasi hapus.
             }
         }
@@ -106,7 +106,7 @@ class MainActivity : AppCompatActivity() {
                 override fun onNothingSelected(parent: AdapterView<*>) {
                     // Jika tidak ada kategori yang dipilih, tampilkan semua catatan
                     noteViewModel.allNotes.observe(this@MainActivity) { notes ->
-                        adapter.setNotes(notes)
+                        adapter.submitList(notes)
                         updateEmptyView(notes.isEmpty()) // Memperbarui tampilan kosong
                     }
                 }
@@ -127,13 +127,13 @@ class MainActivity : AppCompatActivity() {
         // Memfilter catatan berdasarkan kategori yang dipilih
         when (category) {
             "Semua" -> noteViewModel.allNotes.observe(this@MainActivity) { notes ->
-                adapter.setNotes(notes)
+                adapter.submitList(notes)
                 updateEmptyView(notes.isEmpty()) // Memperbarui tampilan kosong
             }
             else -> {
                 // Jika kategori tertentu dipilih, tampilkan catatan sesuai kategori
                 noteViewModel.getNotesByCategory(category).observe(this@MainActivity) { notes ->
-                    adapter.setNotes(notes)
+                    adapter.submitList(notes)
                     updateEmptyView(notes.isEmpty()) // Memperbarui tampilan kosong jika tidak ada catatan maka akan muncul pesan kosong
                 }
             }

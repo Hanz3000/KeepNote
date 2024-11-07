@@ -29,14 +29,14 @@ class NoteViewModel(
 
     // Menambahkan catatan baru
     fun insert(note: Note) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             noteDao.insert(note) //memanggil dao untuk menyimpan catatan
         }
     }
 
     // Memperbarui catatan yang sudah ada
     fun update(note: Note) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             noteDao.updateNote(note.id, note.title, note.content, note.category) //mengupdate dari addnote untuk menyimpannya ke dao
         }
     }
@@ -74,7 +74,7 @@ class NoteViewModel(
 
     // Menghapus kategori tertentu dan memperbarui catatan terkait. terusan dari main activity alert iiya
     fun deleteCategory(categoryName: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             categoryDao.deleteByName(categoryName)
 
             noteDao.updateCategoryToDefault(categoryName) //mengirim ke semua
