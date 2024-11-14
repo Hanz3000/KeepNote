@@ -13,10 +13,30 @@ class NoteAdapter(
     private val onNoteClick: (Note) -> Unit
 ) : ListAdapter<Note, NoteAdapter.NoteViewHolder>(NoteDiffCallback()) {
 
+    private var data = arrayListOf<Any>()
     // ViewHolder adalah kelas yang merepresentasikan setiap item dalam RecyclerView
     inner class NoteViewHolder(private val binding: NoteItemBinding) : RecyclerView.ViewHolder(binding.root) {
         // Fungsi untuk mengikat data catatan ke tampilan (View) pada setiap item
         fun bind(note: Note) {
+            data.add("Tugas")
+            data.add(1)
+            data.add(note)
+            binding.note = note // Mengikat objek Note ke layout melalui data binding
+            binding.executePendingBindings() // Memastikan binding segera dieksekusi
+
+            // Mengatur listener untuk menangani klik pada item catatan
+            binding.root.setOnClickListener {
+                onNoteClick(note) // Memanggil fungsi onNoteClick ketika item diklik
+            }
+        }
+    }
+
+    inner class ViewHolder (private val binding: NoteItemBinding) : RecyclerView.ViewHolder(binding.root) {
+        // Fungsi untuk mengikat data catatan ke tampilan (View) pada setiap item
+        fun bind(note: Note) {
+            data.add("Tugas")
+            data.add(1)
+            data.add(note)
             binding.note = note // Mengikat objek Note ke layout melalui data binding
             binding.executePendingBindings() // Memastikan binding segera dieksekusi
 
@@ -65,4 +85,14 @@ class NoteAdapter(
             return oldItem == newItem
         }
     }
+
+    override fun getItemViewType(position: Int): Int {
+        return when(data[position]){
+            is Note -> ITEM_VIEW_TYPE.CONTENT.ordinal
+            else -> ITEM_VIEW_TYPE.HEADER.ordinal
+        }
+    }
+
+    enum class ITEM_VIEW_TYPE {HEADER, CONTENT, }
+
 }
