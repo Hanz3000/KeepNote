@@ -1,5 +1,6 @@
 package com.example.keepnote.adapter
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -46,31 +47,49 @@ class NoteAdapter(
         }
     }
 
-    // Dipanggil untuk mengikat data ke ViewHolder yang sesuai dengan posisi
-    override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
-        val currentNote = getItem(position) // Mengambil catatan pada posisi yang diberikan
-        holder.bind(currentNote) // Mengikat catatan ke ViewHolder
+    // Fungsi untuk mengikat data ke ViewHolder sesuai tipe
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        when (holder) {
+            is NoteViewHolder -> {
+                val currentNote = getItem(position) as? Note // Menggunakan as? untuk konversi aman
+                currentNote?.let { holder.bind(it) }
+            }
+            is HeaderViewHolder -> {
+                val category = getItem(position) as? String // Menggunakan as? untuk konversi aman
+                category?.let { holder.bind(it) }
+            }
+        }
     }
 
+    // Fungsi untuk memperbarui daftar catatan yang sudah dikelompokkan berdasarkan kategori
+    fun submitNoteList(notes: ArrayList<Any>) {
+        data.clear()
+        data.addAll(notes) // Menggunakan addAll untuk menambahkan setiap item di dalam notes
+        super.submitList(data.toList()) // Mengirimkan daftar yang terurut ke submitList
+    }
 
-
-    class NoteDiffCallback : DiffUtil.ItemCallback<Note>(){
-        override fun areItemsTheSame(oldItem: Note, newItem: Note): Boolean {
-            return oldItem.id == newItem.id
+    // NoteDiffCallback tetap digunakan untuk membandingkan catatan
+    class NoteDiffCallback : DiffUtil.ItemCallback<Any>() {
+        override fun areItemsTheSame(oldItem: Any, newItem: Any): Boolean {
+            return when {
+                oldItem is Note && newItem is Note -> oldItem.id == newItem.id
+                else -> false
+            }
         }
 
-        override fun areContentsTheSame(oldItem: Note, newItem: Note): Boolean {
+        @SuppressLint("DiffUtilEquals")
+        override fun areContentsTheSame(oldItem: Any, newItem: Any): Boolean {
             return oldItem == newItem
         }
     }
 
+    // Menentukan tipe tampilan item apakah kategori atau catatan
     override fun getItemViewType(position: Int): Int {
-        return when(data[position]){
+        return when (getItem(position)) {
             is Note -> ITEM_VIEW_TYPE.CONTENT.ordinal
             else -> ITEM_VIEW_TYPE.HEADER.ordinal
         }
     }
 
-    enum class ITEM_VIEW_TYPE {HEADER, CONTENT }
-
+    enum class ITEM_VIEW_TYPE { HEADER, CONTENT }
 }
