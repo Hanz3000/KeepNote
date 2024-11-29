@@ -5,53 +5,45 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.keepnote.databinding.HeaderItemBinding
 import com.example.keepnote.databinding.NoteItemBinding
 import com.example.keepnote.entity.Note
 
 // Adapter untuk RecyclerView yang menampilkan daftar catatan
 class NoteAdapter(
     private val onNoteClick: (Note) -> Unit
-) : ListAdapter<Note, NoteAdapter.NoteViewHolder>(NoteDiffCallback()) {
+) : ListAdapter<Any, RecyclerView.ViewHolder>(NoteDiffCallback()) {
 
     private var data = arrayListOf<Any>()
+
     // ViewHolder adalah kelas yang merepresentasikan setiap item dalam RecyclerView
     inner class NoteViewHolder(private val binding: NoteItemBinding) : RecyclerView.ViewHolder(binding.root) {
-        // Fungsi untuk mengikat data catatan ke tampilan (View) pada setiap item
         fun bind(note: Note) {
-            data.add("Tugas")
-            data.add(1)
-            data.add(note)
-            binding.note = note // Mengikat objek Note ke layout melalui data binding
-            binding.executePendingBindings() // Memastikan binding segera dieksekusi
+            binding.note = note
+            binding.executePendingBindings()
 
-            // Mengatur listener untuk menangani klik pada item catatan
+            // Listener untuk klik pada item catatan
             binding.root.setOnClickListener {
-                onNoteClick(note) // Memanggil fungsi onNoteClick ketika item diklik
+                onNoteClick(note)
             }
         }
     }
 
-    inner class ViewHolder (private val binding: NoteItemBinding) : RecyclerView.ViewHolder(binding.root) {
-        // Fungsi untuk mengikat data catatan ke tampilan (View) pada setiap item
-        fun bind(note: Note) {
-            data.add("Tugas")
-            data.add(1)
-            data.add(note)
-            binding.note = note // Mengikat objek Note ke layout melalui data binding
-            binding.executePendingBindings() // Memastikan binding segera dieksekusi
-
-            // Mengatur listener untuk menangani klik pada item catatan
-            binding.root.setOnClickListener {
-                onNoteClick(note) // Memanggil fungsi onNoteClick ketika item diklik
-            }
+    inner class HeaderViewHolder(private val binding: HeaderItemBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(category: String) {
+            binding.textViewKategori.text = category
         }
     }
 
-    // Dipanggil saat ViewHolder baru dibuat
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
-        // Menginflate layout item catatan menggunakan data binding
-        val binding = NoteItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return NoteViewHolder(binding)
+    // Fungsi untuk membuat ViewHolder sesuai tipe
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        val noteBinding = NoteItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val headerBinding = HeaderItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+
+        return when (viewType) {
+            ITEM_VIEW_TYPE.CONTENT.ordinal -> NoteViewHolder(noteBinding)
+            else -> HeaderViewHolder(headerBinding)
+        }
     }
 
     // Dipanggil untuk mengikat data ke ViewHolder yang sesuai dengan posisi
@@ -60,21 +52,7 @@ class NoteAdapter(
         holder.bind(currentNote) // Mengikat catatan ke ViewHolder
     }
 
-    // Mengembalikan jumlah item catatan yang ada di dalam daftar
-    //override fun getItemCount(): Int {
-    //    return notes.size
-    //}
 
-    // Memperbarui daftar catatan dengan data yang baru
-    //fun setNotes(newNotes: List<Note>) {
-    //    notes = newNotes // Mengganti daftar catatan lama dengan yang baru
-    //    notifyDataSetChanged() // Memberitahukan RecyclerView bahwa data telah diperbarui
-    //}
-
-    // Mengembalikan catatan pada posisi tertentu
-    //fun getNoteAt(position: Int): Note {
-    //    return notes[position]
-    //}
 
     class NoteDiffCallback : DiffUtil.ItemCallback<Note>(){
         override fun areItemsTheSame(oldItem: Note, newItem: Note): Boolean {
@@ -93,6 +71,6 @@ class NoteAdapter(
         }
     }
 
-    enum class ITEM_VIEW_TYPE {HEADER, CONTENT, }
+    enum class ITEM_VIEW_TYPE {HEADER, CONTENT }
 
 }
