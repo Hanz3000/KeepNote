@@ -21,6 +21,7 @@ import com.example.keepnote.databinding.ActivityMainBinding
 import com.example.keepnote.entity.Note
 import com.example.keepnote.viewmodel.NoteViewModel
 import com.example.keepnote.viewmodel.NoteViewModelFactory
+import com.google.firebase.database.FirebaseDatabase
 
 class MainActivity : AppCompatActivity() {
 
@@ -37,56 +38,58 @@ class MainActivity : AppCompatActivity() {
             (application as NoteApplication).database.trashDao()
         )
     }
+
+    // Inisialisasi Firebase Database reference
+    private val categoriesRef = FirebaseDatabase.getInstance().getReference("categories")
+    // Inisialisasi Firebase Database reference
+    private val deletedNotesRef = FirebaseDatabase.getInstance().getReference("deleted_notes")
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.viewModel = noteViewModel
         binding.lifecycleOwner = this
 
+        setupRecyclerView()
+        setupCategorySpinner()
+        observeNotes()
+
+        binding.fabaddnote.setOnClickListener {
+            startActivity(Intent(this, AddNoteActivity::class.java))
+        }
+
+        binding.fabTrash.setOnClickListener {
+            startActivity(Intent(this, TrashActivity::class.java))
+        }
+    }
+
+    private fun setupRecyclerView() {
         adapter = NoteAdapter { note -> onNoteClick(note) }
-        val customLayoutManager = GridLayoutManager(this, 2)
-        customLayoutManager.spanSizeLookup = object: GridLayoutManager.SpanSizeLookup() {
+        val layoutManager = GridLayoutManager(this, 2)
+        layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
-                return when(data[position]) {
+                return when (data[position]) {
                     is Note -> 1
                     else -> 2
                 }
             }
         }
-        binding.recyclerView.layoutManager = customLayoutManager
+        binding.recyclerView.layoutManager = layoutManager
         binding.recyclerView.adapter = adapter
 
         setupItemTouchHelper(adapter)
-        setupCategorySpinner(adapter)
-
-        noteViewModel.allNotes.observe(this) { notes ->
-            submitNoteList(notes)
-            updateEmptyView(notes.isEmpty())
-        }
-
-        binding.fabaddnote.setOnClickListener {
-            val intent = Intent(this, AddNoteActivity::class.java)
-            startActivity(intent)
-        }
-
-        binding.fabTrash.setOnClickListener {
-            val intent = Intent(this, TrashActivity::class.java)
-            startActivity(intent)
-        }
     }
 
     private fun setupItemTouchHelper(adapter: NoteAdapter) {
         val itemTouchHelperCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
             override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean = false
 
-            // Prevent swipe on category items
             override fun getSwipeDirs(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
                 val position = viewHolder.adapterPosition
                 return if (position != RecyclerView.NO_POSITION && data[position] is String) {
-                    // Return 0 for categories (String items) to disable swiping
-                    0
+                    0 // Disable swipe for category items
                 } else {
-                    // Return normal swipe directions for notes
                     super.getSwipeDirs(recyclerView, viewHolder)
                 }
             }
@@ -94,12 +97,9 @@ class MainActivity : AppCompatActivity() {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
                 val item = data[position]
-
                 if (item is Note) {
                     showDeleteNoteDialog(item, adapter, position)
                 } else {
-                    // This shouldn't be called for categories due to getSwipeDirs,
-                    // but just in case, reset the view
                     adapter.notifyItemChanged(position)
                 }
             }
@@ -107,21 +107,22 @@ class MainActivity : AppCompatActivity() {
         ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(binding.recyclerView)
     }
 
-    private fun setupCategorySpinner(adapter: NoteAdapter) {
+    private fun setupCategorySpinner() {
         categorySpinner = binding.categorySpinner
 
-        noteViewModel.getAllCategories().observe(this) { categories ->
+        noteViewModel.getAllCategoryNames().observe(this) { categories ->
             val allCategories = mutableListOf("Semua").apply { addAll(categories) }
             categoryAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, allCategories).apply {
                 setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             }
             categorySpinner.adapter = categoryAdapter
-            categorySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
 
+            categorySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                     val selectedCategory = categorySpinner.selectedItem.toString()
-                    filterNotesByCategory(selectedCategory, adapter)
+                    filterNotesByCategory(selectedCategory)
                 }
+
                 override fun onNothingSelected(parent: AdapterView<*>) {
                     noteViewModel.allNotes.observe(this@MainActivity) { notes ->
                         submitNoteList(notes)
@@ -140,17 +141,23 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun filterNotesByCategory(category: String, adapter: NoteAdapter) {
-        when (category) {
-            "Semua" -> noteViewModel.allNotes.observe(this@MainActivity) { notes ->
+    private fun observeNotes() {
+        noteViewModel.allNotes.observe(this) { notes ->
+            submitNoteList(notes)
+            updateEmptyView(notes.isEmpty())
+        }
+    }
+
+    private fun filterNotesByCategory(category: String) {
+        if (category == "Semua") {
+            noteViewModel.allNotes.observe(this) { notes ->
                 submitNoteList(notes)
                 updateEmptyView(notes.isEmpty())
             }
-            else -> {
-                noteViewModel.getNotesByCategory(category).observe(this@MainActivity) { notes ->
-                    submitNoteList(notes)
-                    updateEmptyView(notes.isEmpty())
-                }
+        } else {
+            noteViewModel.getNotesByCategory(category).observe(this) { notes ->
+                submitNoteList(notes)
+                updateEmptyView(notes.isEmpty())
             }
         }
     }
@@ -160,7 +167,12 @@ class MainActivity : AppCompatActivity() {
             .setMessage("Anda yakin ingin menghapus catatan '${note.title}'?")
             .setCancelable(false)
             .setPositiveButton("Ya") { dialog, _ ->
+                // Simpan catatan yang dihapus ke Firebase
+                saveDeletedNoteToFirebase(note)
+
+                // Hapus catatan dari Room Database
                 noteViewModel.delete(note)
+
                 dialog.dismiss()
             }
             .setNegativeButton("Tidak") { dialog, _ ->
@@ -169,6 +181,19 @@ class MainActivity : AppCompatActivity() {
             }
             .show()
     }
+
+    // Fungsi untuk menyimpan catatan yang dihapus ke Firebase
+    private fun saveDeletedNoteToFirebase(note: Note) {
+        val noteId = note.id.toString()
+        deletedNotesRef.child(noteId).setValue(note)
+            .addOnSuccessListener {
+                Toast.makeText(this, "Catatan '${note.title}' berhasil diarsipkan ke Firebase", Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener { exception ->
+                Toast.makeText(this, "Gagal mengarsipkan catatan: ${exception.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
+
 
     private fun showDeleteCategoryDialog(categoryName: String) {
         AlertDialog.Builder(this)
@@ -180,9 +205,18 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun deleteCategory(categoryName: String) {
-        noteViewModel.deleteCategory(categoryName)
-        Toast.makeText(this, "Kategori '$categoryName' telah dihapus", Toast.LENGTH_SHORT).show()
-        categorySpinner.setSelection(0)
+        // Menghapus kategori dari Firebase
+        categoriesRef.child(categoryName).removeValue()
+            .addOnSuccessListener {
+                Toast.makeText(this, "Kategori '$categoryName' telah dihapus dari Firebase", Toast.LENGTH_SHORT).show()
+                categorySpinner.setSelection(0)
+
+                // Menghapus kategori dari Room Database
+                noteViewModel.deleteCategoryByName(categoryName)
+            }
+            .addOnFailureListener { exception ->
+                Toast.makeText(this, "Gagal menghapus kategori: ${exception.message}", Toast.LENGTH_SHORT).show()
+            }
     }
 
     private fun updateEmptyView(isEmpty: Boolean) {
@@ -212,4 +246,3 @@ class MainActivity : AppCompatActivity() {
         adapter.submitNoteList(data as ArrayList<Any>)
     }
 }
-
