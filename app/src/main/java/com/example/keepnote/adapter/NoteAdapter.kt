@@ -10,14 +10,14 @@ import com.example.keepnote.databinding.HeaderItemBinding
 import com.example.keepnote.databinding.NoteItemBinding
 import com.example.keepnote.entity.Note
 
-// Adapter untuk RecyclerView yang menampilkan daftar catatan
+// Adapter untuk RecyclerView yang menampilkan daftar catatan dan kategori
 class NoteAdapter(
     private val onNoteClick: (Note) -> Unit
 ) : ListAdapter<Any, RecyclerView.ViewHolder>(NoteDiffCallback()) {
 
-    private var data = arrayListOf<Any>()
+    private var data = arrayListOf<Any>() // Menyimpan data baik kategori maupun catatan
 
-    // ViewHolder adalah kelas yang merepresentasikan setiap item dalam RecyclerView
+    // ViewHolder untuk item catatan
     inner class NoteViewHolder(private val binding: NoteItemBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(note: Note) {
             binding.note = note
@@ -30,6 +30,7 @@ class NoteAdapter(
         }
     }
 
+    // ViewHolder untuk header kategori
     inner class HeaderViewHolder(private val binding: HeaderItemBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(category: String) {
             binding.textViewKategori.text = category
