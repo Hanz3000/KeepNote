@@ -109,9 +109,9 @@ class AddNoteActivity : AppCompatActivity() {
             categories.add(0, "Pilih Kategori")
 
             // Inisialisasi adapter untuk spinner kategori
-            categoryAdapter = ArrayAdapter(this@AddNoteActivity, android.R.layout.simple_spinner_item, categories) //menghubungkan ke spiner
-            categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item) //menetapkan dropdown
-            binding.spinnerCategory.adapter = categoryAdapter //menghubungkan adaptercategori ke spiner kategori
+            categoryAdapter = ArrayAdapter(this@AddNoteActivity, android.R.layout.simple_spinner_item, categories)
+            categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            binding.spinnerCategory.adapter = categoryAdapter
 
             // Menetapkan kategori yang dipilih jika sedang mengedit catatan
             selectCategory(selectedCategory)
