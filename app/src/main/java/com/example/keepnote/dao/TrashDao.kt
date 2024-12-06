@@ -30,4 +30,10 @@ interface TrashDao {
     // Mengambil semua catatan dari tabel trash sebagai array
     @Query("SELECT * FROM trash")
     fun getAll(): Array<Trash>
+
+    // Mengambil semua catatan yang dihapus (di Trash)
+    @Query("SELECT * FROM trash")
+    fun getAllTrashNotes(): LiveData<List<Trash>>
+
+
 }
