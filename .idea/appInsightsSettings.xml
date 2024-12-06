@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.example.keepnote" />
+                  <option name="mobileSdkAppId" value="1:593321168362:android:3e711597fa1ddedfa3f693" />
+                  <option name="projectId" value="percobaan-c2641" />
+                  <option name="projectNumber" value="593321168362" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
