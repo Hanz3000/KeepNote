@@ -7,26 +7,29 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.keepnote.entity.Category
 
-// Data Access Object (DAO) untuk operasi database pada tabel kategori (categories)
 @Dao
 interface CategoryDao {
 
-    // Menyisipkan atau memperbarui kategori ke dalam database
-    // Jika kategori sudah ada (berdasarkan nama), data akan digantikan karena menggunakan strategi REPLACE
+    // Menambahkan kategori baru atau mengganti yang lama jika sudah ada
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-     suspend fun insert(category: Category)
+    suspend fun insert(category: Category)
+
+    @Query("SELECT * FROM Categories")
+    fun getAllCategories(): LiveData<List<Category>>
 
     // Menghapus kategori berdasarkan nama
     @Query("DELETE FROM categories WHERE name = :categoryName")
-     fun deleteByName(categoryName: String)
+    suspend fun deleteCategoryByName(categoryName: String)
 
-    // Mengambil semua kategori dalam urutan abjad dan mengembalikannya sebagai LiveData
-    // LiveData memungkinkan pengamatan pada perubahan data secara real-time
+    // Mengambil semua kategori dan mengurutkannya berdasarkan nama
     @Query("SELECT * FROM categories ORDER BY name ASC")
-    fun getAllCategories(): LiveData<List<Category>>
+    fun getAll(): LiveData<List<Category>>
 
-    // Mengambil semua kategori dan mengembalikannya sebagai array
-    // Ini adalah fungsi sinkron yang mengembalikan seluruh isi tabel kategori
-    @Query("SELECT * FROM categories")
-    fun getAll(): Array<Category>
+    // Mengambil hanya nama kategori dalam urutan alfabet
+    @Query("SELECT name FROM categories ORDER BY name ASC")
+    fun getAllCategoryNames(): LiveData<List<String>>
+
+    // Mengambil kategori berdasarkan nama (akan mengembalikan null jika tidak ditemukan)
+    @Query("SELECT * FROM categories WHERE name = :categoryName LIMIT 1")
+    suspend fun getCategoryByName(categoryName: String): Category?
 }

@@ -23,7 +23,7 @@ interface NoteDao {
 
     // Menghapus catatan dari database berdasarkan ID catatan
     @Query("DELETE FROM notes WHERE id = :noteId")
-     fun deleteById(noteId: Long)
+    suspend fun deleteById(noteId: Long)
 
     // Memperbarui judul, isi, dan kategori catatan berdasarkan ID
     @Query("UPDATE notes SET title = :title, content = :content, category = :category WHERE id = :noteId")
@@ -35,15 +35,22 @@ interface NoteDao {
     fun getNotesByCategory(categoryName: String): LiveData<List<Note>>
 
     // Mengambil semua catatan yang tidak memiliki kategori (NULL) dan mengembalikannya sebagai LiveData
-    @Query("SELECT * FROM notes WHERE category IS NULL")
+    @Query("SELECT * FROM notes WHERE category IS NULL ORDER BY id DESC")
     fun getUncategorizedNotes(): LiveData<List<Note>>
 
     // Mengubah kategori catatan yang sesuai dengan kategori lama menjadi 'Uncategorized'
     @Query("UPDATE notes SET category = 'Tidak Ada Kategori' WHERE category = :oldCategory")
     suspend fun updateCategoryToDefault(oldCategory: String)
 
+    // Mengubah kategori catatan yang sesuai dengan kategori lama menjadi kategori baru
+    @Query("UPDATE notes SET category = :newCategory WHERE category = :oldCategory")
+    suspend fun updateCategoryForNotes(oldCategory: String, newCategory: String)
+
     // Mengambil semua catatan dan mengembalikannya sebagai array
     // Ini adalah versi sinkron untuk mengambil data tanpa LiveData
     @Query("SELECT * FROM notes ORDER BY id DESC")
     fun getAll(): Array<Note>
+
+    @Query("SELECT * FROM notes WHERE id = :noteId LIMIT 1")
+    suspend fun getNoteById(noteId: Long): Note?
 }
