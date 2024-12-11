@@ -81,3 +81,4 @@ class TrashActivity : AppCompatActivity() {
             .show()
     }
 }
+
