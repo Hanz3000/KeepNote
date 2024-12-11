@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">KeepNote</string>
+    <string name="search_notes_hint">Cari catatan...</string>
 </resources>

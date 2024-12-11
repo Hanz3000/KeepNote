@@ -22,4 +22,10 @@
     <color name="note_color_4">#FFF3E0</color>
     <color name="note_color_5">#F1F8E9</color>
     <color name="note_color_6">#E0F7FA</color>
+
+    <color name="border_color">#B0BEC5</color>
+    <color name="text_primary">#333333</color>
+
+
+
 </resources>

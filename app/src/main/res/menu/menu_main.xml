@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- res/menu/menu_main.xml -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_trash"
+        android:title="Sampah"
+        android:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_about"
+        android:title="Tentang"
+        android:icon="@drawable/ic_add"
+        android:showAsAction="ifRoom" />
+
+
+        <item
+            android:id="@+id/action_settings"
+            android:title="Setting"
+            android:icon="@drawable/ic_add"
+            android:showAsAction="ifRoom"/>
+
+
+</menu>
