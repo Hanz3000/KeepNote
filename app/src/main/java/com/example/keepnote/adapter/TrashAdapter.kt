@@ -27,6 +27,7 @@ class TrashAdapter(
                 buttonRestore.setOnClickListener { onRecoverClick(trash) }
                 // Tombol untuk menghapus catatan secara permanen
                 buttonDelete.setOnClickListener { onDeleteClick(trash) }
+
             }
         }
     }
