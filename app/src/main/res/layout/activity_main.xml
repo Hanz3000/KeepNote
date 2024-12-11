@@ -20,31 +20,35 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent">
 
+
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="?attr/colorPrimary"
-                app:title="Keep Note"
+                android:paddingHorizontal="56dp"
                 app:titleTextColor="@android:color/white"
                 app:titleTextAppearance="@style/TextAppearance.AppCompat.Large">
 
-                <!-- Tombol Tempat Sampah di Toolbar -->
-                <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/fabTrash"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end|top"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginTop="8dp"
-                    android:src="@drawable/ic_hapus"
-                    app:backgroundTint="@android:color/transparent"
-                    app:elevation="0dp"
-                    app:fabSize="normal"
-                    app:tint="@android:color/white"
-                    android:padding="8dp" /> <!-- Menambahkan padding -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
-                <!-- Warna ikon -->
+                    <androidx.appcompat.widget.SearchView
+                        android:id="@+id/searchView"
+                        android:layout_width="0dp"
+                        android:layout_height="42dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/rounded_search_view"
+                        android:padding="4dp"
+                        android:theme="@style/ThemeOverlay.AppCompat.Light"
+                        app:queryHint="Cari catatan..."/>
+
+
+
+                </LinearLayout>
             </androidx.appcompat.widget.Toolbar>
         </com.google.android.material.appbar.AppBarLayout>
 
@@ -123,6 +127,10 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:tint="@android:color/white"
                 tools:ignore="SpeakableTextPresentCheck" />
+
+
+
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
