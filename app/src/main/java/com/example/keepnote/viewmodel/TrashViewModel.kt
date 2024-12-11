@@ -59,34 +59,38 @@ class TrashViewModel(private val trashDao: TrashDao, private val noteDao: NoteDa
     // Fungsi untuk menghapus catatan secara permanen
     fun permanentlyDelete(trash: Trash) {
         viewModelScope.launch(Dispatchers.IO) {
-            // Pindahkan catatan ke delete_note_permanent sebelum dihapus permanen
-            val permanentNote = Trash(
-                id = trash.id,
-                title = trash.title,
-                content = trash.content,
-                category = trash.category,
-                deletedDate = trash.deletedDate, // Pastikan memberi nilai deletedDate
-                noteId = trash.noteId // Pastikan memberi nilai noteId
-            )
-
-            // Pindahkan catatan ke delete_note_permanent di Firebase
             try {
-                // Lakukan pemindahan ke delete_note_permanent
-                val task1 = deleteNoteRef.child(trash.id.toString()).setValue(permanentNote).await()
+                // Logging untuk memantau apakah operasi berhasil
+                Log.d("TrashViewModel", "Deleting from Firebase... Trash ID: ${trash.id}")
 
-                // Jika berhasil memindahkan ke delete_note_permanent, hapus catatan dari deleted_notes
-                val task2 = deletedNotesRef.child(trash.id.toString()).removeValue().await()
+                // Menghapus dari trash Firebase
+                trashRef.child(trash.id.toString()).removeValue().await()
+                Log.d("TrashViewModel", "Deleted from trash in Firebase")
 
-                // Hapus catatan dari Room Database secara permanen
+                // Menghapus dari deleted_notes Firebase
+                deletedNotesRef.child(trash.id.toString()).removeValue().await()
+                Log.d("TrashViewModel", "Deleted from deleted_notes in Firebase")
+
+                // Memindahkan ke delete_note_permanent Firebase
+                val permanentNote = Trash(
+                    id = trash.id,
+                    title = trash.title,
+                    content = trash.content,
+                    category = trash.category,
+                    deletedDate = trash.deletedDate,
+                    noteId = trash.noteId
+                )
+                deleteNoteRef.child(trash.id.toString()).setValue(permanentNote).await()
+                Log.d("TrashViewModel", "Moved to delete_note_permanent in Firebase")
+
+                // Hapus dari Room database secara permanen
                 trashDao.permanentlyDelete(trash.id)
 
-                // Hapus catatan dari Firebase trash
-                trashRef.child(trash.id.toString()).removeValue()
-
             } catch (e: Exception) {
-                // Tangani error
                 Log.e("TrashViewModel", "Error during permanent delete: ${e.message}")
             }
         }
     }
+
+
 }
