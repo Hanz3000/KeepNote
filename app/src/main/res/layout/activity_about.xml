@@ -1,0 +1,70 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_color"
+    tools:context=".activity.AboutActivity">
+
+    <!-- Menambahkan Toolbar dengan constraint yang benar -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        app:title="About This App"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Deskripsi aplikasi -->
+    <TextView
+        android:id="@+id/about_app_description"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Keep Note adalah aplikasi sederhana untuk mencatat dan menyimpan informasi penting. Aplikasi ini memungkinkan pengguna untuk membuat, mengedit, dan menghapus catatan, serta mengatur kategori untuk setiap catatan. Dengan tampilan yang user-friendly dan fungsi yang mudah digunakan, Keep Note hadir untuk membantu Anda dalam mengorganisir dan mengingat hal-hal penting dalam kehidupan sehari-hari."
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"
+        android:padding="16dp"
+        android:textSize="16sp"
+        android:textColor="@color/text_primary"
+        android:gravity="center"
+        android:background="@drawable/background_text"/>
+
+    <!-- Tentang pembuat aplikasi -->
+    <TextView
+        android:id="@+id/about_credits"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Credits:\n\n1. FARHAN ABDILAH RAMADHAN (76) 3C\n2. DIVA VANIA (74) 3C\n3. NOVAN HAFIDS (80) 3C"
+        app:layout_constraintTop_toBottomOf="@id/about_app_description"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="32dp"
+        android:padding="16dp"
+        android:textSize="14sp"
+        android:textColor="@color/text_primary"
+        android:gravity="center"
+        android:background="@drawable/background_text"/>
+
+    <!-- Footer untuk informasi tambahan -->
+    <TextView
+        android:id="@+id/about_footer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Thank you for using Keep Note!"
+        app:layout_constraintTop_toBottomOf="@id/about_credits"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"
+        android:padding="16dp"
+        android:textSize="14sp"
+        android:textColor="@color/text_primary"
+        android:gravity="center"
+        android:background="@drawable/background_text"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

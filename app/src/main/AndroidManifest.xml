@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET"/>
-
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <application
         android:name=".NoteApplication"
         android:allowBackup="true"
@@ -37,6 +37,11 @@
         <activity
             android:name=".activity.TrashActivity"
             android:exported="true" />
+
+        <activity android:name=".activity.AboutActivity">
+            <!-- Konfigurasi lain jika diperlukan -->
+        </activity>
+
 
     </application>
 
