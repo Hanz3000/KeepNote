@@ -2,11 +2,14 @@ package com.example.keepnote
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.Toast
+import androidx.appcompat.widget.SearchView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -14,6 +17,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.example.keepnote.activity.AboutActivity
 import com.example.keepnote.activity.AddNoteActivity
 import com.example.keepnote.activity.TrashActivity
 import com.example.keepnote.adapter.NoteAdapter
@@ -31,6 +35,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var adapter: NoteAdapter
 
     private val data = arrayListOf<Any>()
+
     private val noteViewModel: NoteViewModel by viewModels {
         NoteViewModelFactory(
             (application as NoteApplication).database.noteDao(),
@@ -39,15 +44,13 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
-    // Inisialisasi Firebase Database reference
     private val categoriesRef = FirebaseDatabase.getInstance().getReference("categories")
-    // Inisialisasi Firebase Database reference
     private val deletedNotesRef = FirebaseDatabase.getInstance().getReference("deleted_notes")
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        setSupportActionBar(binding.toolbar)
         binding.viewModel = noteViewModel
         binding.lifecycleOwner = this
 
@@ -55,12 +58,41 @@ class MainActivity : AppCompatActivity() {
         setupCategorySpinner()
         observeNotes()
 
+        // SearchView listener
+        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                query?.let { filterNotesByQuery(it) }
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                newText?.let { filterNotesByQuery(it) }
+                return true
+            }
+        })
+
+        // FAB click listener
         binding.fabaddnote.setOnClickListener {
             startActivity(Intent(this, AddNoteActivity::class.java))
         }
+    }
 
-        binding.fabTrash.setOnClickListener {
-            startActivity(Intent(this, TrashActivity::class.java))
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_trash -> {
+                startActivity(Intent(this, TrashActivity::class.java))
+                true
+            }
+            R.id.action_about -> {
+                startActivity(Intent(this, AboutActivity::class.java))
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
@@ -77,7 +109,6 @@ class MainActivity : AppCompatActivity() {
         }
         binding.recyclerView.layoutManager = layoutManager
         binding.recyclerView.adapter = adapter
-
         setupItemTouchHelper(adapter)
     }
 
@@ -109,7 +140,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupCategorySpinner() {
         categorySpinner = binding.categorySpinner
-
         noteViewModel.getAllCategoryNames().observe(this) { categories ->
             val allCategories = mutableListOf("Semua").apply { addAll(categories) }
             categoryAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, allCategories).apply {
@@ -162,17 +192,20 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun filterNotesByQuery(query: String) {
+        noteViewModel.searchNotes(query).observe(this) { notes ->
+            submitNoteList(notes)
+            updateEmptyView(notes.isEmpty())
+        }
+    }
+
     private fun showDeleteNoteDialog(note: Note, adapter: NoteAdapter, position: Int) {
         AlertDialog.Builder(this)
             .setMessage("Anda yakin ingin menghapus catatan '${note.title}'?")
             .setCancelable(false)
             .setPositiveButton("Ya") { dialog, _ ->
-                // Simpan catatan yang dihapus ke Firebase
                 saveDeletedNoteToFirebase(note)
-
-                // Hapus catatan dari Room Database
                 noteViewModel.delete(note)
-
                 dialog.dismiss()
             }
             .setNegativeButton("Tidak") { dialog, _ ->
@@ -182,7 +215,6 @@ class MainActivity : AppCompatActivity() {
             .show()
     }
 
-    // Fungsi untuk menyimpan catatan yang dihapus ke Firebase
     private fun saveDeletedNoteToFirebase(note: Note) {
         val noteId = note.id.toString()
         deletedNotesRef.child(noteId).setValue(note)
@@ -194,7 +226,6 @@ class MainActivity : AppCompatActivity() {
             }
     }
 
-
     private fun showDeleteCategoryDialog(categoryName: String) {
         AlertDialog.Builder(this)
             .setTitle("Hapus Kategori")
@@ -205,13 +236,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun deleteCategory(categoryName: String) {
-        // Menghapus kategori dari Firebase
         categoriesRef.child(categoryName).removeValue()
             .addOnSuccessListener {
                 Toast.makeText(this, "Kategori '$categoryName' telah dihapus dari Firebase", Toast.LENGTH_SHORT).show()
                 categorySpinner.setSelection(0)
-
-                // Menghapus kategori dari Room Database
                 noteViewModel.deleteCategoryByName(categoryName)
             }
             .addOnFailureListener { exception ->
