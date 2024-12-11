@@ -11,10 +11,9 @@ import com.example.keepnote.entity.Note
 @Dao
 interface NoteDao {
 
-    // Menyisipkan atau memperbarui catatan ke dalam database
     // Jika catatan dengan ID yang sama sudah ada, catatan lama akan diganti karena menggunakan strategi REPLACE
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(note: Note)
+    fun insert(note: Note): Long
 
     // Mengambil semua catatan dan mengembalikan sebagai LiveData
     // Data akan diurutkan berdasarkan ID secara descending (dari terbaru ke terlama)
@@ -53,4 +52,7 @@ interface NoteDao {
 
     @Query("SELECT * FROM notes WHERE id = :noteId LIMIT 1")
     suspend fun getNoteById(noteId: Long): Note?
+
+    @Query("SELECT * FROM notes WHERE title LIKE :query OR content LIKE :query")
+    fun searchNotes(query: String): LiveData<List<Note>>
 }
