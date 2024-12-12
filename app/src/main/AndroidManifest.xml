@@ -42,6 +42,9 @@
             <!-- Konfigurasi lain jika diperlukan -->
         </activity>
 
+        <activity
+            android:name=".activity.SettingsActivity"
+            android:exported="true" />
 
     </application>
 

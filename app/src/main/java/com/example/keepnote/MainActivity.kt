@@ -1,5 +1,6 @@
 package com.example.keepnote
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
@@ -13,12 +14,14 @@ import androidx.appcompat.widget.SearchView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.keepnote.activity.AboutActivity
 import com.example.keepnote.activity.AddNoteActivity
+import com.example.keepnote.activity.SettingsActivity
 import com.example.keepnote.activity.TrashActivity
 import com.example.keepnote.adapter.NoteAdapter
 import com.example.keepnote.databinding.ActivityMainBinding
@@ -49,6 +52,11 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Mengambil tema yang sudah dipilih sebelumnya
+        val theme = getAppTheme(this)
+        setAppTheme(this, theme)
+
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         setSupportActionBar(binding.toolbar)
         binding.viewModel = noteViewModel
@@ -90,6 +98,10 @@ class MainActivity : AppCompatActivity() {
             }
             R.id.action_about -> {
                 startActivity(Intent(this, AboutActivity::class.java))
+                true
+            }
+            R.id.action_settings -> {
+                startActivity(Intent(this, SettingsActivity::class.java))
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -272,5 +284,22 @@ class MainActivity : AppCompatActivity() {
             data.addAll(notesInCategory)
         }
         adapter.submitNoteList(data as ArrayList<Any>)
+    }
+
+    // Fungsi untuk mengganti tema
+    private fun setAppTheme(context: Context, theme: String) {
+        val sharedPref = context.getSharedPreferences("AppPreferences", Context.MODE_PRIVATE)
+        sharedPref.edit().putString("APP_THEME", theme).apply()
+
+        when (theme) {
+            "LIGHT" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            "DARK" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        }
+    }
+
+    // Fungsi untuk mengambil tema yang dipilih
+    private fun getAppTheme(context: Context): String {
+        val sharedPref = context.getSharedPreferences("AppPreferences", Context.MODE_PRIVATE)
+        return sharedPref.getString("APP_THEME", "LIGHT") ?: "LIGHT" // Default ke terang
     }
 }
