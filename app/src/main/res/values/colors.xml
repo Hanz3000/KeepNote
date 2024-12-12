@@ -26,6 +26,21 @@
     <color name="border_color">#B0BEC5</color>
     <color name="text_primary">#333333</color>
 
+    <!-- Warna utama untuk tema -->
+    <color name="colorPrimary">#6200EE</color> <!-- Ungu terang -->
+    <color name="colorPrimaryDark">#3700B3</color> <!-- Ungu gelap -->
+    <color name="colorAccent">#03DAC5</color> <!-- Teal terang -->
 
+    <!-- Warna latar belakang untuk tema terang -->
+    <color name="colorBackgroundLight">#FFFFFF</color> <!-- Putih terang -->
+
+    <!-- Warna latar belakang untuk tema gelap -->
+    <color name="colorBackgroundDark">#121212</color> <!-- Hitam gelap -->
+
+    <!-- Warna teks untuk tema terang -->
+    <color name="colorTextLight">#000000</color> <!-- Hitam -->
+
+    <!-- Warna teks untuk tema gelap -->
+    <color name="colorTextDark">#FFFFFF</color> <!-- Putih -->
 
 </resources>
