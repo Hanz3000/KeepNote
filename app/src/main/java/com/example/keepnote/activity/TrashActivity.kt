@@ -37,7 +37,7 @@ class TrashActivity : AppCompatActivity() {
             { trash ->
                 trashViewModel.recover(trash) // Pulihkan catatan
                 trashRef.child(trash.id.toString()).removeValue() // Hapus dari trash di Firebase
-                noteRef.child(trash.id.toString()).setValue(trash) // Simpan kembali ke Firebase notes
+                noteRef.child(trash.noteId.toString()).setValue(trash) // Simpan kembali ke Firebase notes
                 Toast.makeText(this, "Catatan dipulihkan", Toast.LENGTH_SHORT).show()
             },
             { trash ->

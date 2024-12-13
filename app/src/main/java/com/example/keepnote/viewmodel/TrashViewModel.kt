@@ -23,7 +23,7 @@ class TrashViewModel(private val trashDao: TrashDao, private val noteDao: NoteDa
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val recoveredNote = Note(
-                    id = trash.id,
+                    id = trash.noteId,
                     title = trash.title,
                     content = trash.content,
                     category = trash.category,
@@ -31,8 +31,8 @@ class TrashViewModel(private val trashDao: TrashDao, private val noteDao: NoteDa
                 )
                 noteDao.insert(recoveredNote)
                 trashDao.deleteById(trash.id)
-                deletedNotesRef.child(trash.id.toString()).removeValue()
-                noteRef.child(trash.id.toString()).setValue(recoveredNote)
+                deletedNotesRef.child(trash.noteId.toString()).removeValue()
+                noteRef.child(trash.noteId.toString()).setValue(recoveredNote)
             } catch (e: Exception) {
                 Log.e("TrashViewModel", "Error recovering note: ${e.message}")
             }
@@ -42,7 +42,7 @@ class TrashViewModel(private val trashDao: TrashDao, private val noteDao: NoteDa
     fun permanentlyDelete(trash: Trash) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                deletedNotesRef.child(trash.id.toString()).removeValue()
+                deletedNotesRef.child(trash.noteId.toString()).removeValue()
                     .addOnSuccessListener {
                         Log.d("TrashViewModel", "Catatan dengan ID ${trash.id} berhasil dihapus dari Firebase.")
 
