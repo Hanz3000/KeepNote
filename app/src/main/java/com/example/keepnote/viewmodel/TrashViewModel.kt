@@ -1,5 +1,6 @@
 package com.example.keepnote.viewmodel
 
+import android.icu.text.SimpleDateFormat
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
@@ -12,6 +13,7 @@ import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import java.util.Locale
 
 class TrashViewModel(private val trashDao: TrashDao, private val noteDao: NoteDao) : ViewModel() {
 
@@ -27,7 +29,7 @@ class TrashViewModel(private val trashDao: TrashDao, private val noteDao: NoteDa
                     title = trash.title,
                     content = trash.content,
                     category = trash.category,
-                    timestamp = System.currentTimeMillis().toString()
+                    timestamp = getCurrentTimestamp() // Gunakan fungsi lokal
                 )
                 noteDao.insert(recoveredNote)
                 trashDao.deleteById(trash.id)
@@ -37,6 +39,11 @@ class TrashViewModel(private val trashDao: TrashDao, private val noteDao: NoteDa
                 Log.e("TrashViewModel", "Error recovering note: ${e.message}")
             }
         }
+    }
+
+    private fun getCurrentTimestamp(): String {
+        val dateFormat = SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.getDefault())
+        return dateFormat.format(System.currentTimeMillis())
     }
 
     fun permanentlyDelete(trash: Trash) {
