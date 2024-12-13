@@ -12,8 +12,10 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="16dp">
+        android:padding="16dp"
+        android:background="@android:color/white">
 
+        <!-- Spinner for Category Selection -->
         <Spinner
             android:id="@+id/spinnerCategory"
             android:layout_width="0dp"
@@ -21,29 +23,27 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="16dp"
+            android:padding="16dp"
+            android:textSize="18sp"
+            android:background="@drawable/spinner_background"
             tools:ignore="MissingConstraints,TouchTargetSizeCheck" />
 
-        <Button
-            android:id="@+id/buttonAddCategory"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Tambah Kategori"
-            app:layout_constraintBottom_toBottomOf="@id/btnSimpan"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginEnd="8dp" />
-
+        <!-- EditText for Title -->
         <EditText
             android:id="@+id/editTextTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:hint="Masukkan Judul Catatan"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:background="@drawable/edit_text_background"
+            android:padding="12dp"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/spinnerCategory"
             tools:ignore="TouchTargetSizeCheck" />
 
+        <!-- EditText for Content -->
         <EditText
             android:id="@+id/editTextContent"
             android:layout_width="0dp"
@@ -52,6 +52,8 @@
             android:inputType="textMultiLine"
             android:gravity="top|start"
             android:minHeight="100dp"
+            android:background="@drawable/edit_text_background"
+            android:padding="12dp"
             app:layout_constraintTop_toBottomOf="@id/editTextTitle"
             app:layout_constraintBottom_toTopOf="@id/btnSimpan"
             app:layout_constraintStart_toStartOf="parent"
@@ -59,13 +61,37 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp" />
 
+        <!-- Button for Add Category with Icon -->
+        <Button
+            android:id="@+id/buttonAddCategory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tambah Kategori"
+            android:drawableLeft="@android:drawable/ic_input_add"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginBottom="16dp"
+            android:layout_marginStart="16dp"
+            android:background="@drawable/button_background"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            android:padding="10dp"/>
+
+        <!-- Save Button with Icon -->
         <Button
             android:id="@+id/btnSimpan"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Simpan"
+            android:drawableLeft="@android:drawable/ic_menu_save"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/button_background"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            android:padding="10dp"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
