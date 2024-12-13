@@ -10,7 +10,6 @@ import com.example.keepnote.dao.NoteDao
 import com.example.keepnote.dao.TrashDao
 import com.example.keepnote.entity.Note
 import com.example.keepnote.entity.Trash
-import com.example.keepnote.entity.Category
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -69,9 +68,6 @@ class NoteViewModel(
         }
     }
 
-    // LiveData untuk mendapatkan catatan yang sudah dihapus (dari Trash)
-    val allTrashNotes: LiveData<List<Trash>> = trashDao.getAllTrashNotes()
-
     // Fungsi untuk menghapus catatan dan menyimpannya ke Trash
     fun delete(note: Note) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -104,48 +100,6 @@ class NoteViewModel(
     fun deleteCategoryByName(categoryName: String) {
         viewModelScope.launch {
             categoryDao.deleteCategoryByName(categoryName)
-        }
-    }
-
-    // Fungsi untuk memperbarui kategori pada catatan tertentu
-    fun updateCategoryForNotes(oldCategory: String, newCategory: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val oldCategoryObj = categoryDao.getCategoryByName(oldCategory)
-            val newCategoryObj = categoryDao.getCategoryByName(newCategory)
-
-            if (oldCategoryObj != null && newCategoryObj != null) {
-                noteDao.updateCategoryForNotes(oldCategoryObj.name, newCategoryObj.name)
-            }
-        }
-    }
-
-    // Fungsi untuk menambah kategori baru
-    fun insertCategory(categoryName: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val category = Category(name = categoryName)
-            categoryDao.insert(category)
-        }
-    }
-
-    // Fungsi untuk memulihkan catatan dari Trash ke halaman Note
-    fun restoreNoteFromTrash(trash: Trash) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val note = Note(
-                id = trash.noteId,
-                title = trash.title,
-                content = trash.content,
-                category = trash.category,
-            )
-
-            noteDao.insert(note)
-            trashDao.deleteById(trash.noteId)
-        }
-    }
-
-    // Fungsi untuk menghapus catatan secara permanen dari Trash
-    fun deleteNotePermanentlyFromTrash(trashId: Long) {
-        viewModelScope.launch(Dispatchers.IO) {
-            trashDao.permanentlyDelete(trashId)
         }
     }
 
