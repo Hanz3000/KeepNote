@@ -45,10 +45,17 @@ class NoteViewModel(
     // Fungsi untuk memperbarui catatan
     fun update(note: Note) {
         viewModelScope.launch(Dispatchers.IO) {
+            // Perbarui timestamp dengan waktu saat ini
+            note.timestamp = Note.getCurrentTimestamp()
+
+            // Simpan pembaruan ke database
             noteDao.updateNote(note.id, note.title, note.content, note.category)
+
+            // Simpan pembaruan ke Firebase
             saveNoteToFirebase(note)
         }
     }
+
 
     // Fungsi untuk menyimpan atau memperbarui catatan di Firebase
     private fun saveNoteToFirebase(note: Note) {

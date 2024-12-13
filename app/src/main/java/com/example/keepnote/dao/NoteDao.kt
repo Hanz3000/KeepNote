@@ -6,6 +6,9 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.keepnote.entity.Note
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 // Data Access Object (DAO) untuk operasi database pada tabel notes
 @Dao
@@ -24,9 +27,18 @@ interface NoteDao {
     @Query("DELETE FROM notes WHERE id = :noteId")
     suspend fun deleteById(noteId: Long)
 
-    // Memperbarui judul, isi, dan kategori catatan berdasarkan ID
-    @Query("UPDATE notes SET title = :title, content = :content, category = :category WHERE id = :noteId")
-    suspend fun updateNote(noteId: Long, title: String, content: String, category: String)
+    // Memperbarui catatan berdasarkan ID, termasuk timestamp
+    @Query(
+        "UPDATE notes SET title = :title, content = :content, category = :category, " +
+                "timestamp = :timestamp WHERE id = :noteId"
+    )
+    suspend fun updateNote(
+        noteId: Long,
+        title: String,
+        content: String,
+        category: String,
+        timestamp: String = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date())
+    )
 
     // Mengambil catatan yang sesuai dengan kategori tertentu dan mengembalikannya sebagai LiveData
     // Data akan diurutkan berdasarkan ID secara descending
@@ -37,7 +49,7 @@ interface NoteDao {
     @Query("SELECT * FROM notes WHERE category IS NULL ORDER BY id DESC")
     fun getUncategorizedNotes(): LiveData<List<Note>>
 
-    // Mengubah kategori catatan yang sesuai dengan kategori lama menjadi 'Uncategorized'
+    // Mengubah kategori catatan yang sesuai dengan kategori lama menjadi 'Tidak Ada Kategori'
     @Query("UPDATE notes SET category = 'Tidak Ada Kategori' WHERE category = :oldCategory")
     suspend fun updateCategoryToDefault(oldCategory: String)
 
