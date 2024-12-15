@@ -76,6 +76,7 @@ dependencies {
     implementation("androidx.room:room-ktx:$room_version")
 
     testImplementation("androidx.room:room-testing:$room_version")
+    implementation ("com.airbnb.android:lottie:6.1.0")
 
     androidTestImplementation("androidx.room:room-testing:$room_version")
     androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0-RC.2")

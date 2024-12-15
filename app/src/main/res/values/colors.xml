@@ -6,7 +6,7 @@
 
     <!-- Warna baru yang ditambahkan -->
     <color name="background_color">#F5F5F5</color>
-    <color name="fab_color">#559E04</color>
+    <color name="fab_color">#006DC0</color>
     <color name="text_color_secondary">#757575</color>
     <color name="gray">#808080</color>
 
@@ -42,5 +42,8 @@
 
     <!-- Warna teks untuk tema gelap -->
     <color name="colorTextDark">#FFFFFF</color> <!-- Putih -->
+
+    <color name="divider_color">#D3D3D3</color>
+    <color name="cardBackground">#DFDFDF</color>
 
 </resources>

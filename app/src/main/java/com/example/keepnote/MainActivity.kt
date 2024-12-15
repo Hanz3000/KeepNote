@@ -231,10 +231,10 @@ class MainActivity : AppCompatActivity() {
         val noteId = note.id.toString()
         deletedNotesRef.child(noteId).setValue(note)
             .addOnSuccessListener {
-                Toast.makeText(this, "Catatan '${note.title}' berhasil diarsipkan ke Firebase", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Catatan '${note.title}' berhasil dihapus", Toast.LENGTH_SHORT).show()
             }
             .addOnFailureListener { exception ->
-                Toast.makeText(this, "Gagal mengarsipkan catatan: ${exception.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Gagal dihapus: ${exception.message}", Toast.LENGTH_SHORT).show()
             }
     }
 

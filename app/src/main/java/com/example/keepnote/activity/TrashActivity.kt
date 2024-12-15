@@ -1,6 +1,7 @@
 package com.example.keepnote.activity
 
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
@@ -15,6 +16,7 @@ import com.example.keepnote.adapter.TrashAdapter
 import com.example.keepnote.entity.Trash
 import com.example.keepnote.viewmodel.TrashViewModel
 import com.example.keepnote.viewmodel.TrashViewModelFactory
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.firebase.database.FirebaseDatabase
 
 class TrashActivity : AppCompatActivity() {
@@ -26,6 +28,13 @@ class TrashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_trash)
+
+        // Menampilkan tombol back di toolbar
+        val toolbar: MaterialToolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
+
+        // Menampilkan tombol back di toolbar
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val trashDao = (application as NoteApplication).database.trashDao()
         val noteDao = (application as NoteApplication).database.noteDao()
@@ -68,6 +77,17 @@ class TrashActivity : AppCompatActivity() {
         })
     }
 
+    // Menangani aksi klik pada tombol back
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressed() // Kembali ke aktivitas sebelumnya
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
     private fun showDeleteConfirmationDialog(trash: Trash) {
         AlertDialog.Builder(this)
             .setTitle("Hapus Permanen")
@@ -81,4 +101,3 @@ class TrashActivity : AppCompatActivity() {
             .show()
     }
 }
-

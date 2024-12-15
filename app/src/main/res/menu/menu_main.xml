@@ -7,17 +7,19 @@
         android:showAsAction="ifRoom" />
 
     <item
+        android:id="@+id/action_settings"
+        android:title="Setting"
+        android:icon="@drawable/ic_add"
+        android:showAsAction="ifRoom"/>
+
+    <item
         android:id="@+id/action_about"
         android:title="Tentang"
         android:icon="@drawable/ic_add"
         android:showAsAction="ifRoom" />
 
 
-        <item
-            android:id="@+id/action_settings"
-            android:title="Setting"
-            android:icon="@drawable/ic_add"
-            android:showAsAction="ifRoom"/>
+
 
 
 </menu>
