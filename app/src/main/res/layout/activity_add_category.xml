@@ -27,15 +27,19 @@
             android:id="@+id/btnSimpan"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:backgroundTint="@color/primary_color"
             android:text="Simpan"
             app:layout_constraintTop_toBottomOf="@id/editTextCategoryName"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginTop="16dp" />
 
+
+
         <Button
             android:id="@+id/btnBatal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:backgroundTint="@color/primary_color"
             android:text="Batal"
             app:layout_constraintTop_toBottomOf="@id/editTextCategoryName"
             app:layout_constraintStart_toEndOf="@id/btnSimpan"

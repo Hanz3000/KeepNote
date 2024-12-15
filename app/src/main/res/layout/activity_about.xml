@@ -1,69 +1,208 @@
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#F0F4F8"
     tools:context=".activity.AboutActivity">
 
-    <!-- Menambahkan Toolbar dengan constraint yang benar -->
-    <androidx.appcompat.widget.Toolbar
+    <!-- Toolbar with improved styling -->
+    <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
+        android:background="@color/primary_color"
         android:elevation="4dp"
-        app:title="About This App"
+        app:title="Info Aplikasi"
+        app:titleTextColor="@android:color/white"
+        app:navigationIcon="@drawable/ic_arrow_back"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"/>
 
-    <!-- Deskripsi aplikasi -->
-    <TextView
-        android:id="@+id/about_app_description"
+    <!-- Scrollable Content Container -->
+    <androidx.core.widget.NestedScrollView
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Keep Note adalah aplikasi sederhana untuk mencatat dan menyimpan informasi penting. Aplikasi ini memungkinkan pengguna untuk membuat, mengedit, dan menghapus catatan, serta mengatur kategori untuk setiap catatan. Dengan tampilan yang user-friendly dan fungsi yang mudah digunakan, Keep Note hadir untuk membantu Anda dalam mengorganisir dan mengingat hal-hal penting dalam kehidupan sehari-hari."
+        android:layout_height="0dp"
+        android:fillViewport="true"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"
-        android:padding="16dp"
-        android:textSize="16sp"
-        android:textColor="@color/text_primary"
-        android:gravity="center"
-        android:background="@drawable/background_text"/>
+        app:layout_constraintEnd_toEndOf="parent">
 
-    <!-- Tentang pembuat aplikasi -->
-    <TextView
-        android:id="@+id/about_credits"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Credits:\n\n1. FARHAN ABDILAH RAMADHAN (76) 3C\n2. DIVA VANIA (74) 3C\n3. NOVAN HAFIDS (80) 3C"
-        app:layout_constraintTop_toBottomOf="@id/about_app_description"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="32dp"
-        android:padding="16dp"
-        android:textSize="14sp"
-        android:textColor="@color/text_primary"
-        android:gravity="center"
-        android:background="@drawable/background_text"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
 
-    <!-- Footer untuk informasi tambahan -->
-    <TextView
-        android:id="@+id/about_footer"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Thank you for using Keep Note!"
-        app:layout_constraintTop_toBottomOf="@id/about_credits"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"
-        android:padding="16dp"
-        android:textSize="14sp"
-        android:textColor="@color/text_primary"
-        android:gravity="center"
-        android:background="@drawable/background_text"/>
+            <!-- App Logo or Icon -->
+            <ImageView
+                android:id="@+id/app_logo"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:src="@mipmap/ic_note"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="16dp"/>
+
+            <!-- App Description Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp"
+                app:cardBackgroundColor="@android:color/white">
+
+                <TextView
+                    android:id="@+id/about_app_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    android:text="Keep Note adalah aplikasi simpel yang dirancang untuk membantu Anda mencatat dan menyimpan informasi penting dengan mudah. Dengan tampilan yang sederhana dan ramah pengguna, aplikasi ini mempermudah Anda dalam mengorganisasi ide, pemikiran, atau catatan penting, semuanya dalam satu tempat yang praktis dan mudah diakses"
+                    android:textSize="16sp"
+                    android:textColor="@color/text_primary"
+                    android:gravity="center"/>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Credits Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp"
+                app:cardBackgroundColor="@android:color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Tim"
+                        android:textStyle="bold"
+                        android:textSize="18sp"
+                        android:gravity="center"
+                        android:layout_marginBottom="8dp"
+                        android:textColor="@color/primary_color"/>
+
+                    <TextView
+                        android:id="@+id/about_credits"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="1. Farhan Abdilah Ramadhan (76) - 3C\n2. Diva Vania (74) - 3C\n3. Novan Hafids (80) - 3C\n4. Rosyad Al Hasymi (90) - 3C"
+                        android:textSize="14sp"
+                        android:textColor="@color/text_primary"
+                        android:gravity="center"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Version Information -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp"
+                app:cardBackgroundColor="@android:color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Pembaruan Aplikasi"
+                        android:textStyle="bold"
+                        android:textSize="18sp"
+                        android:gravity="center"
+                        android:layout_marginBottom="8dp"
+                        android:textColor="@color/primary_color"/>
+
+                    <TextView
+                        android:id="@+id/app_version"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Version: 1.0.0"
+                        android:textSize="14sp"
+                        android:textColor="@color/text_primary"
+                        android:gravity="center"/>
+
+                    <TextView
+                        android:id="@+id/about_footer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Thank you for using Keep Note!"
+                        android:textSize="14sp"
+                        android:textColor="@color/text_primary"
+                        android:gravity="center"
+                        android:layout_marginTop="8dp"/>
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+            <!-- Support and Suggestion Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp"
+                app:cardBackgroundColor="@android:color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Support dan Saran"
+                        android:textStyle="bold"
+                        android:textSize="18sp"
+                        android:gravity="center"
+                        android:layout_marginBottom="8dp"
+                        android:textColor="@color/primary_color" />
+
+                    <TextView
+                        android:id="@+id/support_link"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="8dp"
+                        android:text="Hubungi Kami"
+                        android:textSize="16sp"
+                        android:textColor="@color/primary_color"
+                        android:gravity="center"
+                        android:background="?attr/selectableItemBackground"
+                        android:onClick="openSupportLink" />
+
+                    <TextView
+                        android:id="@+id/suggestion_link"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="8dp"
+                        android:text="Kirim Saran"
+                        android:textSize="16sp"
+                        android:textColor="@color/primary_color"
+                        android:gravity="center"
+                        android:background="?attr/selectableItemBackground"
+                        android:onClick="openSuggestionLink" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
