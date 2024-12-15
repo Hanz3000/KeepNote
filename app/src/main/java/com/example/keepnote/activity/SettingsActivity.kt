@@ -2,12 +2,11 @@ package com.example.keepnote.activity
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
+import android.view.MenuItem
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import com.example.keepnote.MainActivity
 import com.example.keepnote.R
 
 class SettingsActivity : AppCompatActivity() {
@@ -17,8 +16,12 @@ class SettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_setting)
 
+        val toolbar: androidx.appcompat.widget.Toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
         val btnLightTheme: Button = findViewById(R.id.btnLightTheme)
         val btnDarkTheme: Button = findViewById(R.id.btnDarkTheme)
+
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         btnLightTheme.setOnClickListener {
             setAppTheme(this, "LIGHT")
@@ -28,6 +31,16 @@ class SettingsActivity : AppCompatActivity() {
         btnDarkTheme.setOnClickListener {
             setAppTheme(this, "DARK")
             recreate() // Restart Activity untuk menerapkan tema
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressed() // Kembali ke activity sebelumnya
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
