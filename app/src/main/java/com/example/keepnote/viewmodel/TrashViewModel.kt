@@ -18,12 +18,13 @@ import java.util.Locale
 class TrashViewModel(private val trashDao: TrashDao, private val noteDao: NoteDao) : ViewModel() {
 
     val allTrash: LiveData<List<Trash>> = trashDao.getAllTrash()
-    private val noteRef = FirebaseDatabase.getInstance().getReference("notes")
+    private val noteRef = FirebaseDatabase.getInstance().getReference("notes") // referensi untuk data catatan di firebase
     private val deletedNotesRef = FirebaseDatabase.getInstance().getReference("deleted_notes")
 
     fun recover(trash: Trash) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
+                // Membuat objek baru
                 val recoveredNote = Note(
                     id = trash.noteId,
                     title = trash.title,
@@ -43,7 +44,7 @@ class TrashViewModel(private val trashDao: TrashDao, private val noteDao: NoteDa
 
     private fun getCurrentTimestamp(): String {
         val dateFormat = SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.getDefault())
-        return dateFormat.format(System.currentTimeMillis())
+        return dateFormat.format(System.currentTimeMillis()) // Mengembalikan timespan yang diformat sesuai dengan waktu saat ini
     }
 
     fun permanentlyDelete(trash: Trash) {

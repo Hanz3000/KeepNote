@@ -21,7 +21,7 @@ import com.google.firebase.database.FirebaseDatabase
 
 class TrashActivity : AppCompatActivity() {
 
-    private lateinit var trashViewModel: TrashViewModel
+    private lateinit var trashViewModel: TrashViewModel // Menyimpan trashViewModel untuk mengelola data sampah dalam ViewModel
     private val trashRef = FirebaseDatabase.getInstance().getReference("trash")
     private val noteRef = FirebaseDatabase.getInstance().getReference("notes") // Referensi untuk menyimpan catatan
 
@@ -29,18 +29,20 @@ class TrashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_trash)
 
-        // Menampilkan tombol back di toolbar
+        // Menghubungkan variabel `toolbar` dengan MaterialToolbar dari layout
         val toolbar: MaterialToolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-        // Menampilkan tombol back di toolbar
+        // Menambahkan tombol "kembali" di toolbar untuk navigasi
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        // Instance untuk akses data pada tabel
         val trashDao = (application as NoteApplication).database.trashDao()
         val noteDao = (application as NoteApplication).database.noteDao()
         val factory = TrashViewModelFactory(trashDao, noteDao)
         trashViewModel = viewModels<TrashViewModel> { factory }.value
 
+        // Menghubungkan RecyclerView di layout dengan variabel untuk menampilkan daftar sampah
         val recyclerView: RecyclerView = findViewById(R.id.recycler_view_trash)
         val adapter = TrashAdapter(
             { trash ->
@@ -57,14 +59,14 @@ class TrashActivity : AppCompatActivity() {
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        // Observe data changes in Room and Firebase
+        // Mengamati perubahan pada daftar sampah (allTrash)
         trashViewModel.allTrash.observe(this) { trashList ->
             adapter.submitList(trashList)
             findViewById<TextView>(R.id.empty_view).visibility =
                 if (trashList.isEmpty()) View.VISIBLE else View.GONE
         }
 
-        // Real-time listener for Firebase
+        // Menambahkan listener untuk perubahan data pada referensi trash di firebase
         trashRef.addValueEventListener(object : com.google.firebase.database.ValueEventListener {
             override fun onDataChange(snapshot: com.google.firebase.database.DataSnapshot) {
                 val firebaseTrash = snapshot.children.mapNotNull { it.getValue(Trash::class.java) }
