@@ -34,13 +34,20 @@ class NoteViewModel(
     // Fungsi untuk menambah catatan
     fun insert(note: Note) {
         viewModelScope.launch(Dispatchers.IO) {
-            if (note.id == 0L) {
-                note.id = System.currentTimeMillis() // Menetapkan ID unik berdasarkan waktu
+            if (note.id.isEmpty()) { // Cek apakah ID kosong
+                val firebaseId = FirebaseDatabase.getInstance().reference.push().key
+                if (!firebaseId.isNullOrEmpty()) {
+                    note.id = firebaseId // Tetapkan ID dari Firebase
+                } else {
+                    // Gagal mendapatkan ID dari Firebase, gunakan waktu sebagai fallback
+                    note.id = System.currentTimeMillis().toString()
+                }
             }
-            noteDao.insert(note)
-            saveNoteToFirebase(note)
+            noteDao.insert(note) // Menyimpan ke Room Database
+            saveNoteToFirebase(note) // Menyimpan ke Firebase
         }
     }
+
 
     // Fungsi untuk memperbarui catatan
     fun update(note: Note) {
@@ -93,7 +100,7 @@ class NoteViewModel(
     }
 
     // Fungsi untuk menghapus catatan dari Firebase
-    private fun deleteNoteFromFirebase(noteId: Long) {
+    private fun deleteNoteFromFirebase(noteId: String) {
         notesRef.child(noteId.toString()).removeValue()
             .addOnSuccessListener {
                 Log.d("Firebase", "Note with ID $noteId deleted successfully from Firebase.")

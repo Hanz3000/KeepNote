@@ -25,7 +25,7 @@ interface NoteDao {
 
     // Menghapus catatan dari database berdasarkan ID catatan
     @Query("DELETE FROM notes WHERE id = :noteId")
-    suspend fun deleteById(noteId: Long)
+    suspend fun deleteById(noteId: String)
 
     // Memperbarui catatan berdasarkan ID, termasuk timestamp
     @Query(
@@ -33,7 +33,7 @@ interface NoteDao {
                 "timestamp = :timestamp WHERE id = :noteId"
     )
     suspend fun updateNote(
-        noteId: Long,
+        noteId: String,
         title: String,
         content: String,
         category: String,

@@ -9,7 +9,8 @@ import java.util.Locale
 // Mendefinisikan entitas Note yang mewakili tabel "notes" di database
 @Entity(tableName = "notes")
 data class Note(
-    @PrimaryKey(autoGenerate = true) var id: Long = 0,
+    @PrimaryKey
+    var id: String, // Menambahkan ID sebagai PrimaryKey
     var title: String,
     var content: String,
     var category: String,
@@ -21,4 +22,3 @@ data class Note(
         }
     }
 }
-

@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "trash")
 data class Trash(
     @PrimaryKey(autoGenerate = true) val id: Long = 0, // Primary Key, dihasilkan secara otomatis
-    val noteId: Long, // ID catatan yang dihapus, untuk referensi ke catatan asli
+    val noteId: String, // ID catatan yang dihapus, untuk referensi ke catatan asli
     val deletedDate: Long, // Tanggal dan waktu ketika catatan dihapus, disimpan dalam format timestamp
     val title: String, // Kolom untuk menyimpan judul catatan yang dihapus
     val content: String, // Kolom untuk menyimpan isi catatan yang dihapus
