@@ -264,15 +264,14 @@ class MainActivity : AppCompatActivity() {
 
     private fun onNoteClick(note: Note) {
         val intent = Intent(this, AddNoteActivity::class.java).apply {
-            putExtra("NOTE_ID", note.id)
+            putExtra("NOTE_ID", note.id)  // Pastikan mengirimkan note.id sebagai String
             putExtra("NOTE_TITLE", note.title)
             putExtra("NOTE_CONTENT", note.content)
             putExtra("NOTE_CATEGORY", note.category)
-            putExtra("IS_EDIT", true)
+            putExtra("IS_EDIT", true)  // Menandakan bahwa ini adalah mode edit
         }
         startActivity(intent)
     }
-
     private fun submitNoteList(notes: List<Note>) {
         val groupedNotes = notes.groupBy { it.category }
         data.clear()

@@ -64,9 +64,8 @@ class NoteViewModel(
     }
 
 
-    // Fungsi untuk menyimpan atau memperbarui catatan di Firebase
     private fun saveNoteToFirebase(note: Note) {
-        notesRef.child(note.id.toString()).setValue(note)
+        notesRef.child(note.id).setValue(note)
             .addOnSuccessListener {
                 Log.d("Firebase", "Note with ID ${note.id} saved/updated successfully.")
             }

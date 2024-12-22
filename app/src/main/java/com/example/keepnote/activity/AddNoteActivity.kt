@@ -15,31 +15,23 @@ import com.example.keepnote.entity.Note
 import com.example.keepnote.viewmodel.NoteViewModel
 import com.example.keepnote.viewmodel.NoteViewModelFactory
 import com.google.firebase.database.FirebaseDatabase
-import kotlin.getValue
 
-@Suppress("DEPRECATION")
 class AddNoteActivity : AppCompatActivity() {
-
 
     private val database = FirebaseDatabase.getInstance()
     private val notesRef = database.getReference("notes")
 
-
-    // Binding untuk layout activity_add_note.xml
     private lateinit var binding: ActivityAddNoteBinding
 
-    // ViewModel untuk operasi yang terkait dengan catatan
     private val noteViewModel: NoteViewModel by viewModels {
         NoteViewModelFactory(
-            // Mengambil DAO dari NoteApplication untuk akses database
             (application as NoteApplication).database.noteDao(),
             (application as NoteApplication).database.categoryDao(),
             (application as NoteApplication).database.trashDao()
         )
     }
 
-    // Adapter untuk spinner kategori
-    private lateinit var categoryAdapter: ArrayAdapter<String> //akan mengelola daftar kategori yang ditampilkan di Spinner.
+    private lateinit var categoryAdapter: ArrayAdapter<String>
     private val categories: MutableList<String> = mutableListOf()
 
     companion object {
@@ -48,131 +40,95 @@ class AddNoteActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // Mengatur Data Binding dengan layout activity_add_note.xml
         binding = DataBindingUtil.setContentView(this, R.layout.activity_add_note)
 
-        // Mengambil atau menerima data dari main activity
-        val isEdit = intent.getBooleanExtra("IS_EDIT", false) //jika bernilai false maka akan menambahkan catatan baru
-        val noteId = intent.getLongExtra("NOTE_ID", -1L)
+        val isEdit = intent.getBooleanExtra("IS_EDIT", false)
+        val noteId = intent.getStringExtra("NOTE_ID") ?: ""
         val noteTitle = intent.getStringExtra("NOTE_TITLE") ?: ""
         val noteContent = intent.getStringExtra("NOTE_CONTENT") ?: ""
-        val noteCategory = intent.getStringExtra("NOTE_CATEGORY") ?: "Pilih Kategori" // Kategori default
+        val noteCategory = intent.getStringExtra("NOTE_CATEGORY") ?: "Pilih Kategori"
 
-        // Jika sedang mengedit catatan, isi EditText dengan data catatan yang diterima
-        if (isEdit && noteId != -1L) {
+        if (isEdit && noteId != null) {
             binding.editTextTitle.setText(noteTitle)
             binding.editTextContent.setText(noteContent)
         }
 
-        // Mengatur spinner untuk menampilkan kategori, dengan kategori terpilih jika ada
         setupCategorySpinner(noteCategory)
 
-        // Event handler untuk tombol Simpan fungsi untuk menyimpan inputan
-                binding.btnSimpan.setOnClickListener {
-                    // Mengambil input dari pengguna
-                    val selectedCategory = binding.spinnerCategory.selectedItem.toString()
-                    val title = binding.editTextTitle.text.toString().trim()
-                    val content = binding.editTextContent.text.toString().trim()
+        binding.btnSimpan.setOnClickListener {
+            val selectedCategory = binding.spinnerCategory.selectedItem.toString()
+            val title = binding.editTextTitle.text.toString().trim()
+            val content = binding.editTextContent.text.toString().trim()
 
-                    // Validasi input - semua field harus diisi
-                    if (title.isEmpty() || content.isEmpty() || selectedCategory == "Pilih Kategori") {
-                        Toast.makeText(this, "Judul, isi, dan kategori tidak boleh kosong", Toast.LENGTH_SHORT).show()
-                    } else {
-                        if (isEdit && noteId != -1L) {
-                            // Mengupdate catatan yang sudah ada
-                            noteViewModel.update(Note(noteId.toString(), title, content, selectedCategory))
-                            Toast.makeText(this, "Catatan berhasil diubah", Toast.LENGTH_SHORT).show()
-                        } else {
-                            // Menambahkan catatan baru dengan ID yang meningkat secara berurutan
-                            val lastNoteId = getLastNoteId() // Ambil ID terakhir dari SharedPreferences
-                            val newId = (lastNoteId + 1).toString() // ID baru bertambah 1 dari ID terakhir
+            if (title.isEmpty() || content.isEmpty() || selectedCategory == "Pilih Kategori") {
+                Toast.makeText(this, "Judul, isi, dan kategori tidak boleh kosong", Toast.LENGTH_SHORT).show()
+            } else {
+                if (isEdit && noteId.isNotEmpty()) {
+                    val updatedNote = Note(noteId, title, content, selectedCategory)
+                    noteViewModel.update(updatedNote)
+                    Toast.makeText(this, "Catatan berhasil diubah", Toast.LENGTH_SHORT).show()
+                } else {
+                    val lastNoteId = getLastNoteId()
+                    val newId = (lastNoteId + 1).toString()
 
-                            val newNote = Note(id = newId, title = title, content = content, category = selectedCategory)
-
-                            // Simpan ke Firebase
-                            notesRef.child(newId).setValue(newNote)
-                                .addOnSuccessListener {
-                                    Toast.makeText(this, "Catatan berhasil ditambahkan", Toast.LENGTH_SHORT).show()
-                                }
-                                .addOnFailureListener { e ->
-                                    Toast.makeText(this, "Gagal menambahkan catatan: ${e.message}", Toast.LENGTH_SHORT).show()
-                                }
-
-                            // Simpan ke database lokal (Room)
-                            noteViewModel.insert(newNote)
-
-                            // Update ID terakhir setelah menambahkan catatan baru
-                            updateLastNoteId(newId.toInt()) // Menyimpan ID terakhir yang baru
+                    val newNote = Note(id = newId, title = title, content = content, category = selectedCategory)
+                    notesRef.child(newId).setValue(newNote)
+                        .addOnSuccessListener {
+                            Toast.makeText(this, "Catatan berhasil ditambahkan", Toast.LENGTH_SHORT).show()
+                        }
+                        .addOnFailureListener { e ->
+                            Toast.makeText(this, "Gagal menambahkan catatan: ${e.message}", Toast.LENGTH_SHORT).show()
                         }
 
-                        // Kembali ke MainActivity setelah catatan disimpan
-                        finish()
-                    }
+                    noteViewModel.insert(newNote)
+                    updateLastNoteId(newId.toInt())
                 }
+                finish()
+            }
+        }
 
-
-//        1. Event handler untuk tombol tambah kategori
         binding.buttonAddCategory.setOnClickListener {
-            // Memulai CategoryActivity untuk menambah kategori baru
             val intent = Intent(this, CategoryActivity::class.java)
-            startActivityForResult(intent, REQUEST_CODE_ADD_CATEGORY) //dimulai dengan startactivity
+            startActivityForResult(intent, REQUEST_CODE_ADD_CATEGORY)
         }
     }
 
-    // Fungsi untuk mengambil ID terakhir yang digunakan dari SharedPreferences
     private fun getLastNoteId(): Int {
         val sharedPreferences = getSharedPreferences("NotePreferences", MODE_PRIVATE)
-        return sharedPreferences.getInt("lastNoteId", 0) // Mengambil ID terakhir atau 0 jika belum ada
+        return sharedPreferences.getInt("lastNoteId", 0)
     }
 
-    // Fungsi untuk menyimpan ID terakhir yang digunakan ke SharedPreferences
     private fun updateLastNoteId(lastId: Int) {
         val sharedPreferences = getSharedPreferences("NotePreferences", MODE_PRIVATE)
-        sharedPreferences.edit().putInt("lastNoteId", lastId).apply() // Menyimpan ID terakhir
+        sharedPreferences.edit().putInt("lastNoteId", lastId).apply()
     }
 
-    // 3. Menampilkan Kategori di Halaman Input (AddNoteActivity)
     private fun setupCategorySpinner(selectedCategory: String) {
-        // Mengamati kategori yang disimpan di ViewModel
         noteViewModel.getAllCategoryNames().observe(this) { categoryNames ->
-            // Membersihkan dan memperbarui daftar kategori
             categories.clear()
-
-            // Menambahkan kategori yang diambil dari database
             categories.addAll(categoryNames)
-
-            // Menambahkan item default "Pilih Kategori"
             categories.add(0, "Pilih Kategori")
 
-            // Inisialisasi adapter untuk spinner kategori
             categoryAdapter = ArrayAdapter(this@AddNoteActivity, android.R.layout.simple_spinner_item, categories)
             categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             binding.spinnerCategory.adapter = categoryAdapter
 
-            // Menetapkan kategori yang dipilih jika sedang mengedit catatan
             selectCategory(selectedCategory)
         }
     }
 
-    // Memilih kategori tertentu dalam spinner berdasarkan nama kategori
     private fun selectCategory(categoryName: String) {
-        // Mencari posisi kategori dalam daftar
         val position = categories.indexOf(categoryName)
         if (position >= 0) {
-            // Menetapkan posisi spinner sesuai kategori yang dipilih
             binding.spinnerCategory.setSelection(position)
         }
     }
 
-    // 2. Menerima hasil dari aktivitas dari category activity , MEMANGGIL ON ACTIVITY RESULT UNTUK MENERIMA seperti menambah kategori
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE_ADD_CATEGORY && resultCode == Activity.RESULT_OK) {
-            // Mengambil kategori baru yang ditambahkan dari CategoryActivity
             val newCategory = data?.getStringExtra("NEW_CATEGORY_NAME")
             newCategory?.let {
-                // Menambahkan kategori baru ke daftar dan memperbarui adapter spinner
                 categories.add(it)
                 categoryAdapter.notifyDataSetChanged()
             }
