@@ -63,6 +63,8 @@
             tools:ignore="TouchTargetSizeCheck" />
 
         <!-- RecyclerView untuk daftar catatan -->
+
+        <!-- Tampilan kosong jika tidak ada catatan -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="0dp"
@@ -71,11 +73,12 @@
             android:padding="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/categorySpinner"
+            app:layout_constraintVertical_bias="0.0"
             tools:listitem="@layout/activity_add_note" />
 
-        <!-- Tampilan kosong jika tidak ada catatan -->
         <TextView
             android:id="@+id/empty_view"
             android:layout_width="wrap_content"

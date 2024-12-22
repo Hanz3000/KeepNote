@@ -14,10 +14,16 @@ import com.example.keepnote.databinding.ActivityAddNoteBinding
 import com.example.keepnote.entity.Note
 import com.example.keepnote.viewmodel.NoteViewModel
 import com.example.keepnote.viewmodel.NoteViewModelFactory
+import com.google.firebase.database.FirebaseDatabase
 import kotlin.getValue
 
 @Suppress("DEPRECATION")
 class AddNoteActivity : AppCompatActivity() {
+
+
+    private val database = FirebaseDatabase.getInstance()
+    private val notesRef = database.getReference("notes")
+
 
     // Binding untuk layout activity_add_note.xml
     private lateinit var binding: ActivityAddNoteBinding
@@ -79,6 +85,7 @@ class AddNoteActivity : AppCompatActivity() {
                     Toast.makeText(this, "Catatan berhasil diubah", Toast.LENGTH_SHORT).show()
                 } else {
                     // Menambahkan catatan baru
+                    val id=notesRef.push().key
                     noteViewModel.insert(Note(title = title, content = content, category = selectedCategory))
                     Toast.makeText(this, "Catatan berhasil ditambahkan", Toast.LENGTH_SHORT).show()
                 }

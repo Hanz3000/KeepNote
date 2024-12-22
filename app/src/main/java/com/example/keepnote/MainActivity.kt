@@ -131,7 +131,7 @@ class MainActivity : AppCompatActivity() {
             override fun getSwipeDirs(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
                 val position = viewHolder.adapterPosition
                 return if (position != RecyclerView.NO_POSITION && data[position] is String) {
-                    0 // Disable swipe for category items
+                    0 // selain note tidak akan bisa bergeser
                 } else {
                     super.getSwipeDirs(recyclerView, viewHolder)
                 }
@@ -182,14 +182,12 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
     private fun observeNotes() {
         noteViewModel.allNotes.observe(this) { notes ->
             submitNoteList(notes)
             updateEmptyView(notes.isEmpty())
         }
     }
-
     private fun filterNotesByCategory(category: String) {
         if (category == "Semua") {
             noteViewModel.allNotes.observe(this) { notes ->
@@ -287,7 +285,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     // Fungsi untuk mengganti tema
-    private fun setAppTheme(context: Context, theme: String) {
+    private fun     setAppTheme(context: Context, theme: String) {
         val sharedPref = context.getSharedPreferences("AppPreferences", Context.MODE_PRIVATE)
         sharedPref.edit().putString("APP_THEME", theme).apply()
 

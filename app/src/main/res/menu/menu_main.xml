@@ -18,8 +18,4 @@
         android:icon="@drawable/ic_add"
         android:showAsAction="ifRoom" />
 
-
-
-
-
 </menu>

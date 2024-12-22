@@ -27,21 +27,4 @@ class CategoryViewModel(private val categoryDao: CategoryDao) : ViewModel() {
         }
     }
 
-    // Fungsi untuk menghapus kategori berdasarkan nama
-    fun deleteCategory(categoryName: String) {
-        // Meluncurkan coroutine untuk menjalankan operasi database di latar belakang
-        viewModelScope.launch(Dispatchers.IO) {
-            categoryDao.deleteCategoryByName(categoryName) // Memanggil fungsi deleteByName dari CategoryDao
-            categoriesRef.child(categoryName).removeValue()
-        }
-    }
-
-    fun syncCategoriesFromFirebase() {
-        categoriesRef.get().addOnSuccessListener { snapshot ->
-            viewModelScope.launch(Dispatchers.IO) {
-                val categories = snapshot.children.mapNotNull { it.getValue(Category::class.java) }
-                categories.forEach { categoryDao.insert(it) }
-            }
-        }
-    }
 }

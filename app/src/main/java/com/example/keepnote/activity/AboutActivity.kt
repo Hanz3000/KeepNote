@@ -13,7 +13,7 @@ class AboutActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_about)
 
-        // Setup Toolbar with back navigation
+        // tombol kembali
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
@@ -24,17 +24,17 @@ class AboutActivity : AppCompatActivity() {
 
     // Handle toolbar navigation click
     override fun onSupportNavigateUp(): Boolean {
-        onBackPressed()
+        onBackPressed() //kembali ke activity sebelumnya
         return true
     }
 
-    // Method to open support link
+    // menambahka link
     fun openSupportLink(view: View) {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.instagram.com/farhanrmdhan__?igsh=Z21yNHh2eG1lcGF6"))
         startActivity(intent)
     }
 
-    // Method to open suggestion link
+    // menambahka link 
     fun openSuggestionLink(view: View) {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://wa.me/qr/LHDY2C6WBJH2I1"))
         startActivity(intent)

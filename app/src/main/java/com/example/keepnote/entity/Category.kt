@@ -6,6 +6,6 @@ import androidx.room.PrimaryKey
 // Mendefinisikan entitas Category yang mewakili tabel "categories" di database
 @Entity(tableName = "categories")
 data class Category(
-    @PrimaryKey(autoGenerate = true) val id: Long = 0, // Primary Key, dihasilkan secara otomatis
+    @PrimaryKey(autoGenerate = true) var id: Long = 0, // Primary Key, dihasilkan secara otomatis
     val name: String // Kolom untuk menyimpan nama kategori
 )

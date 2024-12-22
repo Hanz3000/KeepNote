@@ -67,7 +67,7 @@
                     android:gravity="center"/>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Credits Card -->
+            <!-- nama kelompok -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -96,7 +96,7 @@
                         android:id="@+id/about_credits"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="1. Farhan Abdilah Ramadhan (76) - 3C\n2. Diva Vania (74) - 3C\n3. Novan Hafids (80) - 3C\n4. Rosyad Al Hasymi (90) - 3C"
+                        android:text="1. Farhan Abdilah Ramadhan (76) - 3C\n2. Diva Vania (74) - 3C\n3. Novan Hafids (87) - 3C\n4. Rosyad Al Hasymi (88) - 3C"
                         android:textSize="14sp"
                         android:textColor="@color/text_primary"
                         android:gravity="center"/>
@@ -132,16 +132,16 @@
                         android:id="@+id/app_version"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:gravity="center"
                         android:text="Version: 1.0.0"
-                        android:textSize="14sp"
                         android:textColor="@color/text_primary"
-                        android:gravity="center"/>
+                        android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/about_footer"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Thank you for using Keep Note!"
+                        android:text="Terimakasih telah menggunakan keepnote!"
                         android:textSize="14sp"
                         android:textColor="@color/text_primary"
                         android:gravity="center"
@@ -149,7 +149,7 @@
                 </LinearLayout>
 
             </com.google.android.material.card.MaterialCardView>
-            <!-- Support and Suggestion Card -->
+            <!-- suport dan saranm Card -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

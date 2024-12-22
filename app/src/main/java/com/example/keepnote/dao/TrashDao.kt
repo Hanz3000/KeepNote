@@ -16,7 +16,7 @@ interface TrashDao {
 
     // Mengambil semua catatan yang ada di dalam tabel trash dan mengembalikannya sebagai LiveData
     @Query("SELECT * FROM trash")
-    fun getAllTrash(): LiveData<List<Trash>> // Menggunakan LiveData untuk perubahan otomatis di UI
+    fun getAllTrash(): LiveData<List<Trash>>
 
     // Menghapus catatan dari tabel trash berdasarkan ID (menghapus satu baris data dari tabel trash)
     @Query("DELETE FROM trash WHERE id = :trashId")

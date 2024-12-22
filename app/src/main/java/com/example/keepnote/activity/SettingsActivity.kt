@@ -56,8 +56,8 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     // Fungsi untuk mengambil tema yang dipilih
-    private fun getAppTheme(context: Context): String {
-        val sharedPref = context.getSharedPreferences("AppPreferences", Context.MODE_PRIVATE)
-        return sharedPref.getString("APP_THEME", "LIGHT") ?: "LIGHT" // Default ke terang
-    }
+//    private fun getAppTheme(context: Context): String {
+//        val sharedPref = context.getSharedPreferences("AppPreferences", Context.MODE_PRIVATE)
+//        return sharedPref.getString("APP_THEME", "LIGHT") ?: "LIGHT" // Default ke terang
+//    }
 }
