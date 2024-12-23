@@ -12,7 +12,7 @@ interface CategoryDao {
 
     // Menambahkan kategori baru atau mengganti yang lama jika sudah ada
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(category: Category)
+    suspend fun insert(category: Category): Long // Mengembalikan ID yang dihasilkan
 
     @Query("SELECT * FROM Categories")
     fun getAllCategories(): LiveData<List<Category>>

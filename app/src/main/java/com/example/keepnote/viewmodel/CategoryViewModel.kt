@@ -19,12 +19,31 @@ class CategoryViewModel(private val categoryDao: CategoryDao) : ViewModel() {
     val allCategories: LiveData<List<Category>> = categoryDao.getAllCategories()
 
     // Fungsi untuk menambahkan kategori baru
+
     fun insert(category: Category) {
-        // Meluncurkan coroutine untuk menjalankan operasi database di latar belakang
         viewModelScope.launch(Dispatchers.IO) {
-            categoryDao.insert(category) // Memanggil fungsi insert dari CategoryDao
-            categoriesRef.child(category.name).setValue(category)
+            // Menyimpan data ke database lokal dan mendapatkan ID yang dihasilkan
+            val generatedId = categoryDao.insert(category)
+
+            // Membuat objek data dengan ID dari database lokal
+            val categoryData = mapOf(
+                "id" to generatedId,
+                "name" to category.name
+            )
+
+            // Menyimpan data ke Firebase menggunakan ID sebagai kunci utama
+            categoriesRef.child(generatedId.toString()).setValue(categoryData)
+                .addOnSuccessListener {
+                    // Data berhasil disimpan di Firebase
+                    println("Kategori berhasil disimpan ke Firebase dengan ID $generatedId")
+                }
+                .addOnFailureListener {
+                    // Tangani kesalahan jika penyimpanan ke Firebase gagal
+                    it.printStackTrace()
+                }
         }
     }
+
+
 
 }

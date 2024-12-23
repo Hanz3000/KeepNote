@@ -3,6 +3,7 @@ package com.example.keepnote
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -28,7 +29,10 @@ import com.example.keepnote.databinding.ActivityMainBinding
 import com.example.keepnote.entity.Note
 import com.example.keepnote.viewmodel.NoteViewModel
 import com.example.keepnote.viewmodel.NoteViewModelFactory
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 class MainActivity : AppCompatActivity() {
 
@@ -46,6 +50,7 @@ class MainActivity : AppCompatActivity() {
             (application as NoteApplication).database.trashDao()
         )
     }
+
 
     private val categoriesRef = FirebaseDatabase.getInstance().getReference("categories")
     private val deletedNotesRef = FirebaseDatabase.getInstance().getReference("deleted_notes")
@@ -246,15 +251,52 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun deleteCategory(categoryName: String) {
-        categoriesRef.child(categoryName).removeValue()
-            .addOnSuccessListener {
-                Toast.makeText(this, "Kategori '$categoryName' telah dihapus dari Firebase", Toast.LENGTH_SHORT).show()
-                categorySpinner.setSelection(0)
-                noteViewModel.deleteCategoryByName(categoryName)
-            }
-            .addOnFailureListener { exception ->
-                Toast.makeText(this, "Gagal menghapus kategori: ${exception.message}", Toast.LENGTH_SHORT).show()
-            }
+        // Mencari kategori berdasarkan name
+        categoriesRef.orderByChild("name").equalTo(categoryName)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (snapshot.exists()) {
+                        for (categorySnapshot in snapshot.children) {
+                            // Hapus node kategori berdasarkan id
+                            categorySnapshot.ref.removeValue()
+                                .addOnSuccessListener {
+                                    Log.d("DeleteCategory", "Kategori berhasil dihapus dari Firebase")
+                                    Toast.makeText(
+                                        this@MainActivity,
+                                        "Kategori '$categoryName' telah dihapus",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    categorySpinner.setSelection(0)
+                                    noteViewModel.deleteCategoryByName(categoryName)
+                                }
+                                .addOnFailureListener { exception ->
+                                    Log.e("DeleteCategory", "Gagal menghapus kategori", exception)
+                                    Toast.makeText(
+                                        this@MainActivity,
+                                        "Gagal menghapus kategori: ${exception.message}",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                        }
+                    } else {
+                        Log.d("DeleteCategory", "Kategori '$categoryName' tidak ditemukan di Firebase")
+                        Toast.makeText(
+                            this@MainActivity,
+                            "Kategori tidak ditemukan di Firebase",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Log.e("DeleteCategory", "Error: ${error.message}", error.toException())
+                    Toast.makeText(
+                        this@MainActivity,
+                        "Error: ${error.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            })
     }
 
     private fun updateEmptyView(isEmpty: Boolean) {
